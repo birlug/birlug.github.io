@@ -1,0 +1,56 @@
+
+#navbarSupportedConten
+{
+	text-align: right;
+}
+
+header {
+	padding-bottom: 30px;
+}
+
+.definition
+{
+	height: 400px;
+}
+.definition h4
+{ 
+  background-color:rgb(64, 214, 34);
+  border-radius: 5px;
+  text-align: center;
+}
+.definition p {text-align: center;}
+.news 
+{
+	height: 400px;
+}
+.news h4
+{
+	background-color: rgb(49, 226, 203);
+	border-radius: 5px;
+	text-align: center;
+}
+.pictureBox
+{
+	height: 400px;
+}
+.pictureBox h4
+{
+	background-color: rgb(240, 42, 125);
+	border-radius: 5px;
+	text-align: center;
+}
+.meetingPlace
+{
+	height: 400px;
+
+}
+.meetingPlace h4 
+{
+	background-color: rgb(20, 115, 199);
+	border-radius: 5px;
+	text-align: center;
+}
+footer
+{
+	text-align: center;
+}

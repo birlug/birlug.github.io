@@ -2,22 +2,39 @@
 layout: default
 ---
 
-<div class="home">
+<div class="row"> 
+    <div class="news col-lg-6">
+            <h4> تابلوی جلسات ما</h4>
+            <table class="table table-striped" style="direction:rtl;">
+                    <thead>
+                      <tr>
+                        <th scope="col">جلسات   </th>
+                        <th scope="col">تاریخ جلسات </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% for meeting in site.data.meetings %}
+                      <tr>
+                        <td scope="row">{{ meeting.name }}</td>
+                        <td>{{ meeting.date }}</td>
+                      </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+        </div>
+<div class="definition col-lg-6 ">
+    <h4> لاگ بیرجند چیست؟</h4>
+    <p> لاگ بیرجند متشکل از تعدای کاربران لینوکس هست که علاقه ی زیادی به لینوکس داشته و امید به آینده دارند</p>
+</div>
 
-  <h1 class="page-heading">Posts</h1>
+</div>
+<div class="row ">
+<div class="meetingPlace col-lg-6">
+        <h4> محل برگذاری جلسه بعدی </h4>
+    </div>
+<div class="pictureBox col-lg-6">
+<h4> تصویری از دورهمی مون</h4>
 
-  <ul class="post-list">
-    {% for post in site.posts %}
-      <li>
-        <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
-
-        <h2>
-          <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-        </h2>
-      </li>
-    {% endfor %}
-  </ul>
-
-  <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+</div>
 
 </div>
