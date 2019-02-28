@@ -4,6 +4,11 @@
 	text-align: right;
 }
 
+.navBorder
+{
+	border-top: 2px solid #ff0000;
+}
+
 header {
 	padding-bottom: 30px;
 }
