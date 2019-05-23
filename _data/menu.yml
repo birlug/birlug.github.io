@@ -1,10 +1,10 @@
 - text: خانه
-  url: #
+  url: /
 
 - text: مرام نامه
-  url: #
+  url: /مرام نامه/
 
-- text: گیت هاب
+- text : گیت هاب
   url: https://github.com/birlug
 
   text : اینستاگرام
