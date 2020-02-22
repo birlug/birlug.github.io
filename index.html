@@ -2,57 +2,58 @@
 layout: default
 ---
 
-<div class="row"> 
+<div class="row">
 
   <div class="definition col-lg-6 ">
-      <h4> لاگ بیرجند چیست؟</h4>
-      <p> لاگ بیرجند متشکل از تعدای کاربران کامپیوتر هست که علاقه ی زیادی به گنو/لینوکس داشته و امید به آینده ای آزادتر دارند
-          محوریت جلسات لاگ بیرجند عبارتست از حمایت از دنیای آزاد 
-          (شامل آزادی نرم افزار, آزادی بیان و...)
-      </p>
-      <p>
-          با این حال اجتماعی از طرفداران دنیای نرم افزار آزاد هستیم که مایلیم دقایقی را کنار هم سپری کنیم
-      </p>
-      <p>
+    <h4> لاگ بیرجند چیست؟</h4>
+    <p> لاگ بیرجند متشکل از تعدای کاربران کامپیوتر هست که علاقه ی زیادی به گنو/لینوکس داشته و امید به آینده ای آزادتر
+      دارند
+      محوریت جلسات لاگ بیرجند عبارتست از حمایت از دنیای آزاد
+      (شامل آزادی نرم افزار, آزادی بیان و...)
+    </p>
+    <p>
+      با این حال اجتماعی از طرفداران دنیای نرم افزار آزاد هستیم که مایلیم دقایقی را کنار هم سپری کنیم
+    </p>
+    <p>
       شرکت در جلسات این گروه برای عموم علاقه مندان آزاد و رایگان می باشد. چنانچه علاقه مند هستید میتوانید
-      در جلسات این گروه شرکت کرده و اطلاعات خود را با دیگران به اشتراک گذاشته و یا از دانش دیگران استفاده کنید. 
-      
-      </p>
-    </div>
-    
-    <div class="news col-lg-6">
-      <h4> تابلوی جلسات ما</h4>
-      <table class="table table-striped" style="direction:rtl;">
-        <thead>
-          <tr>
-            <th scope="col">جلسات   </th>
-            <th scope="col">تاریخ جلسات </th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for meeting in site.data.meetings %}
-          <tr>
-            <td scope="row">{{ meeting.name }}</td>
-            <td>{{ meeting.date }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+      در جلسات این گروه شرکت کرده و اطلاعات خود را با دیگران به اشتراک گذاشته و یا از دانش دیگران استفاده کنید.
+
+    </p>
   </div>
-  <div class="row">
+
+  <div class="news col-lg-6 col-md-12">
+    <h4> تابلوی جلسات ما</h4>
+    <table class="table table-striped" style="direction:rtl;">
+      <thead>
+        <tr>
+          <th scope="col" class="text-center">جلسات </th>
+          <th scope="col" class="text-center">تاریخ جلسات </th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for meeting in site.data.meetings %}
+        <tr>
+          <td scope="row" class="text-center">{{ meeting.name }}</td>
+          <td class="text-center">{{ meeting.date }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<div class="row">
   <div class="meetingPlace col-lg-6">
     <h4> محل برگزاری جلسه بعدی </h4>
-    <iframe class="map col"  frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-    src="https://www.openstreetmap.org/export/embed.html?bbox=59.28693115711213%2C32.84146575174113%2C59.294012188911445%2C32.84563467174298&amp;layer=mapnik"></iframe>
+    <iframe class="map col" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
+      src="https://www.openstreetmap.org/export/embed.html?bbox=59.28693115711213%2C32.84146575174113%2C59.294012188911445%2C32.84563467174298&amp;layer=mapnik"></iframe>
     <p>
-        آدرس محل برگزاری جلسه: <a href="https://osm.org/go/zNxNk9VAc--" target="_blank">
-          دانشکده مهندسی دانشگاه بیرجند
-       </a>
+      آدرس محل برگزاری جلسه: <a href="https://osm.org/go/zNxNk9VAc--" target="_blank">
+        دانشکده مهندسی دانشگاه بیرجند
+      </a>
     </p>
 
   </div>
   <div class="pictureBox col-lg-6">
-  <h4> تصویری از دورهمی ما</h4>
+    <h4> تصویری از دورهمی ما</h4>
   </div>
 </div>
