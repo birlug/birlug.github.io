@@ -4,6 +4,8 @@
 - text : گیت هاب
   url: https://github.com/birlug
 
-  text : اینستاگرام
+- text : اینستاگرام
   url : https://instagram.com/birjandlug
 
+# - text: پست ها
+#   url : /posts/
