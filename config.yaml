@@ -1,0 +1,36 @@
+baseURL: "https://birlug.github.io"
+languageCode: "fa-ir"
+title: "لاگ بیرجند"
+theme: "tehlug-hugo-theme"
+paginate: 3
+favicon: static/favicon.ico
+
+params:
+  subtitle: "گروه کاربران گنو/لینوکس بیرجند"
+  mapView: 0.002
+  mode: "auto"
+
+  excludedTypes: [gallery]
+  mainSections: [event]
+
+  menu:
+    items:
+      [
+        { title: "جلسات", url: "/events", name: "events" },
+        { title: "موضوعات", url: "/topics", name: "topics" },
+        { title: "ارائه دهندگان", url: "/speakers", name: "speakers" },
+        { title: "تصاویر", url: "/images", name: "images" },
+      ]
+
+  footer:
+    items:
+      [
+        { title: "گیت‌هاب", url: "https://github.com/birlug" },
+        { title: "تلگرام", url: "https://t.me/birlug" },
+        { title: "اینستاگرم", url: "https://instagram.com/birjandlug" },
+        { title: "ایوند", url: "https://evand.com/birlug" },
+      ]
+
+taxonomies:
+  topics: "topics"
+  speakers: "speakers"

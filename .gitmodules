@@ -1,0 +1,3 @@
+[submodule "themes/tehlug-hugo-theme"]
+	path = themes/tehlug-hugo-theme
+	url = https://github.com/tehlug/Tehlug-Hugo-Theme.git

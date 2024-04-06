@@ -1,8 +1,0 @@
-# Site settings
-title: لاگ بیرجند
-baseurl: "" # the subpath of your site, e.g. /blog
-url: "http://birlug.github.io"
-github_username: birlug
-
-# Build settings
-markdown: kramdown
