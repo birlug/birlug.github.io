@@ -10,7 +10,6 @@ params:
   mapView: 0.002
   mode: "auto"
 
-  excludedTypes: [gallery]
   mainSections: [event]
 
   menu:
@@ -34,3 +33,4 @@ params:
 taxonomies:
   topics: "topics"
   speakers: "speakers"
+  locations: "locations"
