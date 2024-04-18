@@ -15,3 +15,12 @@ lat: 32.845253
 lng: 59.229300
 locations: [پارک علم و فناوری]
 ---
+
+### لینک‌های مرتبط
+
+ارائه anti-patterns (محمد مهدی محمدی)
+
+- [performance anti-patterns](https://github.com/debug-ing/performance-antipattern)
+
+ارائه «آشنایی با لینوکس» (محمد زارع مقدم)
+- [Advanced Programming in the UNIX Environments](https://github.com/zwan074/technical-books/blob/master/Advanced.Programming.in.the.UNIX.Environment.3rd.Edition.0321637739.pdf)
