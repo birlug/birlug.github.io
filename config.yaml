@@ -27,7 +27,7 @@ params:
         { title: "گیت‌هاب", url: "https://github.com/birlug" },
         { title: "تلگرام", url: "https://t.me/birlug" },
         { title: "اینستاگرم", url: "https://instagram.com/birjandlug" },
-        { title: "ایوند", url: "https://evand.com/birlug" },
+        { title: "ایوند", url: "https://evand.com/organizations/birlug" },
       ]
 
 taxonomies:

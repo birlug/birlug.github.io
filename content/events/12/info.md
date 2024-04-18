@@ -15,3 +15,8 @@ lat: 32.845253
 lng: 59.229300
 locations: [پارک علم و فناوری]
 ---
+
+### لینک‌های مرتبط
+
+ارائه امنیت برنامه‌های تحت وب (محمد زارع مقدم)
+- [اسلاید](/events/presentations/12/WebApplicationSecurity.pdf)

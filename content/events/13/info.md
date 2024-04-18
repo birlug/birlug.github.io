@@ -15,3 +15,8 @@ lat: 32.845253
 lng: 59.229300
 locations: [پارک علم و فناوری]
 ---
+
+### لینک‌های مرتبط
+
+ارائه Reverse Engineering on Android (سجاد سبزکار)
+- [اسلاید](/events/presentations/13/AndroidReverseEngineering.pdf)
