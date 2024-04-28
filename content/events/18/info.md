@@ -1,6 +1,6 @@
 ---
-title: "جلسه 18 "
-date: 2024-06-01T14:30:00.000Z
+title: "جلسه ۱۸ "
+date: 2024-04-27T14:30:00.000Z
 layout: event
 type: event
 eventNumber: 18
