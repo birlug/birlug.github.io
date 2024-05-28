@@ -1,0 +1,3 @@
+persiantools==4.0.2
+pytz==2024.1
+PyYAML==6.0.1

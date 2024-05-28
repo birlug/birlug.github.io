@@ -1,0 +1,34 @@
+name: Broadcast
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        type: choice
+        description: 'choose the environment'
+        required: true
+        default: 'test'
+        options:
+          - 'test'
+          - 'production'
+
+jobs:
+  broadcast:
+    runs-on: ubuntu-latest
+    environment: {{ github.event.inputs.environment }}
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+
+    - name: prepare
+      run: pip install -r ./tools/requirements.txt
+
+    - name: notify
+      run: ./tools/notify.sh
+      env:
+        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+        CHAT_ID: ${{ vars.CHAT_ID }}
+        TEST: 0
