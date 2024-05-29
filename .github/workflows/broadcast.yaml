@@ -15,7 +15,7 @@ on:
 jobs:
   broadcast:
     runs-on: ubuntu-latest
-    environment: {{ github.event.inputs.environment }}
+    environment: broadcast
 
     steps:
     - name: Checkout code
@@ -24,11 +24,22 @@ jobs:
         fetch-depth: 2
 
     - name: prepare
-      run: pip install -r ./tools/requirements.txt
+      run: |
+        pip install -r ./tools/requirements.txt
+
+        if [ "${{ github.event.inputs.environment }}" == "test" ]; then
+            echo "setting up test environment"
+            echo "CHAT_ID=${{ vars.TEST_CHAT_ID }}" >> $GITHUB_ENV
+            echo "TEST=1" >> $GITHUB_ENV
+          else
+            echo "setting up production environment"
+            echo "CHAT_ID=${{ vars.CHAT_ID }}" >> $GITHUB_ENV
+            echo "TEST=0" >> $GITHUB_ENV
+          fi
 
     - name: notify
       run: ./tools/notify.sh
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        CHAT_ID: ${{ vars.CHAT_ID }}
-        TEST: 0
+        CHAT_ID: ${{ env.CHAT_ID }}
+        TEST: ${{ env.TEST }}
