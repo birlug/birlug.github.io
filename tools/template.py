@@ -1,7 +1,7 @@
 #!/bin/env python
 
 import sys
-import yaml
+import ruamel.yaml as yaml
 from persiantools import digits
 from persiantools.jdatetime import JalaliDate, WEEKDAY_NAMES_FA, MONTH_NAMES_FA
 
