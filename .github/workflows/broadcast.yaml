@@ -42,4 +42,6 @@ jobs:
       env:
         TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         CHAT_ID: ${{ env.CHAT_ID }}
+        MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+        MASTODON_URL: ${{ vars.MASTODON_URL }}
         TEST: ${{ env.TEST }}
