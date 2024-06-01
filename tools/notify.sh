@@ -21,12 +21,17 @@ then
 fi
 
 # telegram
-curl -s -o /dev/null -w "telegram response: %{http_code}" \
-     -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
+message_id=$(curl -sS "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
      -F chat_id="${CHAT_ID}" \
      -F photo=@"${poster}" \
      -F caption="$caption" \
-     -F parse_mode=Markdown
+     -F parse_mode=Markdown | jq .result.message_id)
+
+# pin the message
+curl -s -o /dev/null -w "telegram response: %{http_code}" \
+     -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/pinChatMessage" \
+     -d chat_id="${CHAT_ID}" \
+     -d message_id="$message_id"
 
 # mastodon
 # skip sending message to mastodon in test mode
