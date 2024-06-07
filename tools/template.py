@@ -1,7 +1,7 @@
 #!/bin/env python
 
 import sys
-import ruamel.yaml as yaml
+from ruamel.yaml import YAML
 from persiantools import digits
 from persiantools.jdatetime import JalaliDate, WEEKDAY_NAMES_FA, MONTH_NAMES_FA
 
@@ -19,7 +19,9 @@ def format_presentations(speakers, topics):
     return '\n\n'.join(presentations)
 
 
-content = yaml.safe_load(sys.stdin)
+yaml = YAML(typ='safe', pure=True)
+content = yaml.load(sys.stdin)
+
 datetime = format_time(content['eventDate'], content['startTime'])
 presentations = format_presentations(
         content['speakers'], content['topics'])
@@ -30,7 +32,7 @@ template = f'''\
 {presentations}
 
 📅 {datetime}
-📍{content['locations'][0]}
+📍{content['address']}
 
 ❕*ظرفیت محدود*
 ثبت نام *رایگان* و اطلاعات بیشتر:
