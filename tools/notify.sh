@@ -6,7 +6,7 @@ changes=$(git diff --name-only HEAD~1 | grep event)
 poster=$(echo "$changes" | grep poster)
 
 # generate the caption
-info=$(echo $changes | grep info.md)
+info=$(echo "$changes" | grep info.md)
 content=$(cat $info | sed -n '/---/,/---/{ /---/!{ p } }')
 caption=$(echo "$content" | ./tools/template.py)
 
