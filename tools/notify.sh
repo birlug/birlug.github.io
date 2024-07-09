@@ -21,11 +21,18 @@ then
 fi
 
 # telegram
-message_id=$(curl -sS "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
-     -F chat_id="${CHAT_ID}" \
-     -F photo=@"${poster}" \
-     -F caption="$caption" \
-     -F parse_mode=Markdown | jq .result.message_id)
+if [[ -n "${poster}" ]]; then
+    message_id=$(curl -sS "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
+         -F chat_id="${CHAT_ID}" \
+         -F photo=@"${poster}" \
+         -F caption="$caption" \
+         -F parse_mode=Markdown | jq .result.message_id)
+else
+    message_id=$(curl -sS "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+        -F chat_id="${CHAT_ID}" \
+        -F text="$caption" \
+        -F parse_mode=Markdown | jq .result.message_id)
+fi
 
 # pin the message
 curl -s -o /dev/null -w "telegram response: %{http_code}" \
