@@ -1,6 +1,7 @@
 #!/bin/env python
 
 import sys
+from itertools import zip_longest
 from ruamel.yaml import YAML
 from persiantools import digits
 from persiantools.jdatetime import JalaliDate, WEEKDAY_NAMES_FA, MONTH_NAMES_FA
@@ -13,10 +14,10 @@ def format_time(date, hour):
     return digits.en_to_fa(f'{dayofweek} {date.day} {month} {date.year} - ساعت {hour}')
 
 def format_presentations(speakers, topics):
-    presentations = []
-    for (speaker, topic) in zip(speakers, topics):
-        presentations.append(f'- ‏{topic}\n  ‏ارائه دهنده: {speaker}')
-    return '\n\n'.join(presentations)
+    return '\n\n'.join(
+        f'- ‏{topic}\n  ‏ارائه دهنده: {speaker}' if speaker else f'- ‏{topic}'
+        for topic, speaker in zip_longest(topics, speakers)
+    )
 
 
 yaml = YAML(typ='safe', pure=True)
