@@ -19,6 +19,7 @@ params:
         { title: "موضوعات", url: "/topics", name: "topics" },
         { title: "ارائه دهندگان", url: "/speakers", name: "speakers" },
         { title: "تصاویر", url: "/images", name: "images" },
+        { title: "دورهمی آزادی نرم‌افزار *", url: "/sfd/1403/info", name: "sfd" },
         { title: "چالش‌ها (جدید)", url: "/~challenge", name: "challenges" },
       ]
 
