@@ -20,6 +20,7 @@ params:
         { title: "ارائه دهندگان", url: "/speakers", name: "speakers" },
         { title: "تصاویر", url: "/images", name: "images" },
         { title: "چالش‌ها *", url: "/~challenge", name: "challenges" },
+        { title: "بلاگ", url: "/~blog", name: "blog" },
         { title: "حمایت مالی", url: "/donation", name: "donation" },
       ]
 
