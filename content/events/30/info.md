@@ -9,7 +9,7 @@ startTime: 18:00
 endTime: 20:00
 address: "خیابان غفاری، پارک علم و فناوری (دانشگاه آزاد قدیم)"
 registerLink: https://evand.com/events/birjandlug-30
-speakers: []
+speakers: [محمد مهدی محمدی]
 topics: ["Golang"]
 locations: [پارک علم و فناوری]
 ---
