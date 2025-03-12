@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script src="https://telegram.org/js/telegram-web-app.js?2"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دیوار یادگاری نوروز</title>
+    <style>
+        body {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         background: #121212;
+         color: white;
+         font-family: 'Arial', sans-serif;
+         margin: 0;
+         padding: 20px;
+         overflow-x: hidden;
+         }
+         h1 {
+         margin-bottom: 10px;
+         font-size: 2rem;
+         color: #fff;
+         }
+         .description {
+         margin-bottom: 20px;
+         font-size: 1rem;
+         color: #ccc;
+         text-align: center;
+         max-width: 300px;
+         }
+         .submit-button {
+         margin-bottom: 20px;
+         padding: 15px 30px;
+         font-size: 1.2rem;
+         color: white;
+         background: #3742fa;
+         border: none;
+         border-radius: 10px;
+         cursor: pointer;
+         transition: background 0.2s;
+         width: 100%;
+         max-width: 300px;
+         }
+         .submit-button:hover {
+         background: #5352ed;
+         }
+         .colors {
+         margin-bottom: 20px;
+         display: flex;
+         gap: 10px;
+         flex-wrap: wrap;
+         justify-content: center;
+         }
+         .color-option {
+         width: 40px;
+         height: 40px;
+         border-radius: 50%;
+         cursor: pointer;
+         border: 2px solid transparent;
+         transition: transform 0.2s, border-color 0.2s;
+         }
+         .color-option:hover {
+         transform: scale(1.1);
+         border-color: white;
+         }
+         .color-option.selected {
+         border-color: white;
+         transform: scale(1.1);
+         }
+         .grid-container {
+         width: 100%;
+         max-width: 600px;
+         margin: 0 auto;
+         overflow-x: auto;
+         padding-bottom: 20px;
+         }
+         .grid {
+         display: grid;
+         grid-template-columns: repeat(12, 30px);
+         gap: 2px;
+         margin: 0 auto;
+         touch-action: manipulation;
+         border: 2px solid #444;
+         padding: 10px;
+         background: #1e1e1e;
+         border-radius: 10px;
+         box-sizing: border-box;
+         width: calc(12 * 30px + 11 * 2px + 20px);
+         }
+         .pixel {
+         width: 30px;
+         height: 30px;
+         background: #222;
+         border: 1px solid #555;
+         cursor: pointer;
+         transition: background 0.2s, transform 0.1s;
+         border-radius: 4px;
+         }
+         .pixel:hover {
+         transform: scale(1.1);
+         }
+         .pixel.selected {
+         outline: 2px solid white;
+         outline-offset: -2px;
+         }
+         .pixel.unclickable {
+         cursor: not-allowed;
+         position: relative;
+         }
+         .tooltip {
+         position: absolute;
+         top: -30px;
+         left: 50%;
+         transform: translateX(-50%);
+         background: rgba(0, 0, 0, 0.8);
+         color: white;
+         padding: 5px 10px;
+         border-radius: 5px;
+         font-size: 0.9rem;
+         white-space: nowrap;
+         z-index: 10;
+         opacity: 0; /* Hide by default */
+         transition: opacity 0.2s;
+         }
+         .pixel.unclickable:hover .tooltip {
+         opacity: 1;
+         }
+         @media (max-width: 600px) {
+         .grid {
+         grid-template-columns: repeat(8, 30px);
+         width: calc(8 * 30px + 7 * 2px + 20px);
+         }
+         .submit-button {
+         font-size: 1.5rem;
+         padding: 20px 40px;
+         }
+         }
+    </style>
+</head>
+
+<body>
+    <h1>دیوار یادگاری نوروز</h1>
+    <p class="description">یکی از پیکسل‌های مربعی پایین رو به دلخواه رنگ کرده و روی دکمه «ارسال» کلیک کنید</p>
+    <button class="submit-button">ارسال</button>
+    <div class="colors">
+        <span class="color-option" style="background: #ff4757;" data-color="#ff4757"></span>
+        <span class="color-option" style="background: #3742fa;" data-color="#3742fa"></span>
+        <span class="color-option" style="background: #2ed573;" data-color="#2ed573"></span>
+        <span class="color-option" style="background: #ffa502;" data-color="#ffa502"></span>
+        <span class="color-option" style="background: #ff6b81;" data-color="#ff6b81"></span>
+        <span class="color-option" style="background: #5352ed;" data-color="#5352ed"></span>
+        <span class="color-option" style="background: #7bed9f;" data-color="#7bed9f"></span>
+        <span class="color-option" style="background: #eccc68;" data-color="#eccc68"></span>
+    </div>
+    <div class="grid-container">
+        <div class="grid"></div>
+    </div>
+    <script>
+            console.log('سلام! برنامه در زمان کوتاهی نوشته شده و احتمالا باگ‌های بامزه‌ای داشته باشه. اگه تونستی هک‌ش کنی به من پیام بده و یه قهوه مهمون‌م باش :)');
+
+            const initData = window.Telegram.WebApp.initData || '';
+            const grid = document.querySelector('.grid');
+            const colors = document.querySelectorAll('.color-option');
+            const submitButton = document.querySelector('.submit-button');
+            const _colors = ["#ff4757", "#3742fa", "#2ed573", "#ffa502", "#ff6b81", "#5352ed", "#7bed9f", "#eccc68"];
+            const index = Math.floor(Math.random() * 8);
+            let selectedColor = _colors[index];
+            let lastSelected = null;
+            let selectedPixel = null;
+
+            async function fetchData() {
+                try {
+                    const response = await fetch('https://nowruz-wall.birjandlug.workers.dev');
+                    const data = await response.json();
+                    return data;
+                } catch (error) {
+                    console.error('Error fetching data:', error);
+                    return [];
+                }
+            }
+
+            async function initializeGrid() {
+                const data = await fetchData();
+
+                for (let y = 0; y < 30; y++) {
+                    for (let x = 0; x < 12; x++) {
+                        const pixel = document.createElement('div');
+                        pixel.classList.add('pixel');
+                        grid.appendChild(pixel);
+
+                        const pixelData = data.find(p => p.x === x && p.y === y);
+                        if (pixelData) {
+                            pixel.style.background = _colors[pixelData.color];
+                            pixel.classList.add('unclickable');
+                            pixel.innerHTML = '<span class="tooltip">' + pixelData.name + '</span>';
+                        } else {
+                            pixel.addEventListener('click', () => {
+                                if (pixel.classList.contains('unclickable')) {
+                                    return;
+                                }
+                                if (lastSelected) {
+                                    lastSelected.classList.remove('selected');
+                                    lastSelected.style.background = '#222';
+                                }
+                                pixel.style.background = selectedColor;
+                                pixel.classList.add('selected');
+                                lastSelected = pixel;
+                                selectedPixel = { x, y };
+                                console.log(`Selected pixel: (${x}, ${y})`);
+                            });
+                        }
+                    }
+                }
+            }
+
+            colors.forEach(color => {
+                color.addEventListener('click', () => {
+                    selectedColor = color.getAttribute('data-color');
+                    colors.forEach(c => c.classList.remove('selected'));
+                    color.classList.add('selected');
+                });
+            });
+
+            colors[index].classList.add('selected');
+
+            submitButton.addEventListener('click', () => {
+                if (!selectedPixel) {
+                    alert('هنوز پیکسلی رو رنگ نکردین.');
+                    return;
+                }
+
+                const colorIndex = _colors.indexOf(selectedColor);
+                const data = {
+                    initData: initData,
+                    x: selectedPixel.x,
+                    y: selectedPixel.y,
+                    color: colorIndex,
+                };
+
+                fetch('https://nowruz-wall.birjandlug.workers.dev', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.error) {
+                        alert('خطا: ' + result.error);
+                    } else {
+                        lastSelected.classList.remove('selected');
+                        lastSelected.classList.add('unclickable');
+                        lastSelected = null;
+                        alert('ارسال شد!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('خطا در ارسال.');
+                });
+            });
+
+            initializeGrid();
+    </script>
+</body>
+
+</html>
