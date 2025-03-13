@@ -144,6 +144,7 @@
 <body>
     <h1>دیوار یادگاری نوروز</h1>
     <p class="description">یکی از پیکسل‌های مربعی پایین رو به دلخواه رنگ کرده و روی دکمه «ارسال» کلیک کنید</p>
+    <div style="margin-bottom: 10px; background: rgba(0, 0, 0, 0.8); color: white; padding: 5px 10px; border-radius: 5px; font-size: 1rem; z-index: 20;">تعداد پیکسل‌های رنگ شده: <span id="unclickable-pixels"></span></div>
     <button class="submit-button">ارسال</button>
     <div class="colors">
         <span class="color-option" style="background: #ff4757;" data-color="#ff4757"></span>
@@ -170,6 +171,7 @@
             let selectedColor = _colors[index];
             let lastSelected = null;
             let selectedPixel = null;
+            let clickableCount = 0;
 
             async function fetchData() {
                 try {
@@ -210,10 +212,12 @@
                                 lastSelected = pixel;
                                 selectedPixel = { x, y };
                                 console.log(`Selected pixel: (${x}, ${y})`);
+                                updateUnclickableCount();
                             });
                         }
                     }
                 }
+                updateUnclickableCount();
             }
 
             colors.forEach(color => {
@@ -263,6 +267,12 @@
                     alert('خطا در ارسال.');
                 });
             });
+
+            function updateUnclickableCount() {
+                const totalPixels = document.querySelectorAll('.pixel').length;
+                const unclickablePixels = document.querySelectorAll('.pixel.unclickable').length;
+                document.getElementById('unclickable-pixels').textContent = unclickablePixels;
+            }
 
             initializeGrid();
     </script>
