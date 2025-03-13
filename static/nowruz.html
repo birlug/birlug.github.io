@@ -128,6 +128,15 @@
          .pixel.unclickable:hover .tooltip {
          opacity: 1;
          }
+         .counter {
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1rem;
+            z-index: 20;
+         }
          @media (max-width: 600px) {
          .grid {
          grid-template-columns: repeat(8, 30px);
@@ -137,14 +146,14 @@
          font-size: 1.5rem;
          padding: 20px 40px;
          }
-         }
+        }
     </style>
 </head>
 
 <body>
     <h1>دیوار یادگاری نوروز</h1>
     <p class="description">یکی از پیکسل‌های مربعی پایین رو به دلخواه رنگ کرده و روی دکمه «ارسال» کلیک کنید</p>
-    <div style="margin-bottom: 10px; background: rgba(0, 0, 0, 0.8); color: white; padding: 5px 10px; border-radius: 5px; font-size: 1rem; z-index: 20;">تعداد پیکسل‌های رنگ شده: <span id="unclickable-pixels"></span></div>
+    <div dir="rtl" class="counter"><span id="unclickable-pixels"></span> پیکسل تا الان رنگ شده</div>
     <button class="submit-button">ارسال</button>
     <div class="colors">
         <span class="color-option" style="background: #ff4757;" data-color="#ff4757"></span>
@@ -186,6 +195,7 @@
 
             async function initializeGrid() {
                 const data = await fetchData();
+                updateUnclickableCount(data);
 
                 for (let y = 0; y < 30; y++) {
                     for (let x = 0; x < 12; x++) {
@@ -212,12 +222,11 @@
                                 lastSelected = pixel;
                                 selectedPixel = { x, y };
                                 console.log(`Selected pixel: (${x}, ${y})`);
-                                updateUnclickableCount();
+                                updateUnclickableCount(data);
                             });
                         }
                     }
                 }
-                updateUnclickableCount();
             }
 
             colors.forEach(color => {
@@ -268,12 +277,10 @@
                 });
             });
 
-            function updateUnclickableCount() {
-                const totalPixels = document.querySelectorAll('.pixel').length;
-                const unclickablePixels = document.querySelectorAll('.pixel.unclickable').length;
-                document.getElementById('unclickable-pixels').textContent = unclickablePixels;
+            function updateUnclickableCount(data) {
+                const unclickablePixels = data.length;
+                document.getElementById('unclickable-pixels').textContent = `${String(unclickablePixels).replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d])}`;
             }
-
             initializeGrid();
     </script>
 </body>
