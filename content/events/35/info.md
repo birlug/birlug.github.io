@@ -16,3 +16,4 @@ lng: 59.235771
 locations: ["دانشگاه آزاد"]
 ---
 
+فایل ارائه ([pdf](/events/presentations/35/ebpf.pdf))
