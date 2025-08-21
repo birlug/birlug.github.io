@@ -14,6 +14,13 @@ lat: 32.871331
 lng: 59.229754
 locations: [کافه تراس]
 ---
+
+{{< rawhtml >}}
+<script>
+  window.location.href = "https://sfd.birlug.ir";
+</script>
+{{< /rawhtml >}}
+
 {{< figure src="/events/sfd/1403/poster.png" width=350 >}}
 
 #### حامیان مالی
