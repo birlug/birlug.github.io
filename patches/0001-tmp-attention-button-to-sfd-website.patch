@@ -1,0 +1,30 @@
+From 9695c1f4a0b42baee004cdd80df8f07aa8789701 Mon Sep 17 00:00:00 2001
+From: Amir Mohammadi <amiremohamadi@yahoo.com>
+Date: Wed, 3 Sep 2025 14:01:10 +0330
+Subject: [PATCH] tmp: attention button to sfd website
+
+---
+ layouts/index.html | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/layouts/index.html b/layouts/index.html
+index fcc5e89..96d8cdb 100644
+--- a/layouts/index.html
++++ b/layouts/index.html
+@@ -5,6 +5,13 @@
+ 	<div class="container wrapper">
+ 		{{ partial "head.html" . }}
+ 
++       <div class="attention-wrapper">
++         <button class="attention-button" onclick="window.location.href='https://sfd.birlug.ir'">
++           <div class="pulse-dot"></div>
++           ثبت‌نام جشن آزادی نرم‌افزار
++         </button>
++       </div>
++
+ 		<div class="recent-posts section">
+ 			<h2 class="section-header">
+ 				اخبار و جلسات
+-- 
+2.42.0
+
