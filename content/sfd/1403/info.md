@@ -6,12 +6,6 @@ type: news
 eventNumber: sfd-1403
 ---
 
-{{< rawhtml >}}
-<script>
-  window.location.href = "https://sfd.birlug.ir";
-</script>
-{{< /rawhtml >}}
-
 ![Software Freedom Day](/events/sfd/1403/sfd.png)
 
 به مناسبت روز [**«آزادی نرم‌افزار»**](https://digitalfreedoms.org/fa/sfd) که هر ساله در گوشه گوشه‌ی دنیا جشن گرفته می‌شه، تصمیم داریم امسال در لاگ بیرجند ساعاتی کنار هم باشیم و دورهمی کوچکی با هدف ترویج و معرفی فلسفه آزادی نرم‌افزار داشته باشیم.
