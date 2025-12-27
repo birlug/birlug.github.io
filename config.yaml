@@ -6,6 +6,7 @@ paginate: 3
 favicon: static/favicon.ico
 
 params:
+  customCSS: "/css/attention.css"
   subtitle: "گروه کاربران گنو/لینوکس بیرجند"
   mapView: 0.002
   mode: "auto"
@@ -19,9 +20,10 @@ params:
         { title: "موضوعات", url: "/topics", name: "topics" },
         { title: "ارائه دهندگان", url: "/speakers", name: "speakers" },
         { title: "تصاویر", url: "/images", name: "images" },
-        { title: "چالش‌ها *", url: "/~challenge", name: "challenges" },
+        { title: "چالش‌ها", url: "/~challenge", name: "challenges" },
         { title: "بلاگ", url: "/~blog", name: "blog" },
         { title: "حمایت مالی", url: "/donation", name: "donation" },
+        { title: "جشن آزادی نرم‌افزار *", url: "https://sfd.birlug.ir", name: "sfd" },
       ]
 
   footer:
