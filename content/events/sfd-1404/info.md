@@ -9,12 +9,5 @@ startTime: 18:00
 endTime: 20:30
 address: "سالن فرهنگ دانشگاه بیرجند"
 locations: [دانشگاه بیرجند]
+url: /sfd-1404/
 ---
-
-در حال انتقال به سایت «جشن آزادی نرم‌افزار ۱۴۰۴»
-
-{{< rawhtml >}}
-<script>
-  window.location.href = "https://sfd.birlug.ir";
-</script>
-{{< /rawhtml >}}
