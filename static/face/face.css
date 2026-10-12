@@ -1,0 +1,385 @@
+@font-face {
+    font-family: "Shabnam";
+    font-display: swap;
+    font-style: normal;
+    font-weight: 400;
+    src: url("/font/Shabnam.woff2") format("woff2"),
+        url("/font/Shabnam.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Shabnam";
+    font-display: swap;
+    font-style: normal;
+    font-weight: 500;
+    src: url("/font/Shabnam-Medium.woff2") format("woff2"),
+        url("/font/Shabnam-Medium.woff") format("woff");
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    height: 100%;
+    overflow: hidden;
+    background: #fff;
+    color: #586069;
+    font-family: "Shabnam", sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+    direction: rtl;
+    overscroll-behavior: none;
+    -webkit-text-size-adjust: 100%;
+}
+
+.app {
+    display: flex;
+    flex-direction: column;
+    height: 100dvh;
+    max-width: 28rem;
+    margin: 0 auto;
+    padding:
+        env(safe-area-inset-top)
+        env(safe-area-inset-right)
+        env(safe-area-inset-bottom)
+        env(safe-area-inset-left);
+}
+
+.bar {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 4px 12px;
+    min-height: 52px;
+    padding: 10px 16px 12px;
+}
+
+.bar .back {
+    grid-column: 1;
+    justify-self: start;
+    color: #0366d6;
+    text-decoration: none;
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.bar h1 {
+    grid-column: 2;
+    margin: 0;
+    color: #24292e;
+    font-size: 1.05rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.bar .hint {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: #586069;
+    font-size: 0.8rem;
+    text-align: center;
+}
+
+.bar .hint p {
+    margin: 0;
+}
+
+.stage {
+    position: relative;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+    background: #f6f8fa;
+    border-block: 1px solid #e1e4e8;
+    direction: ltr;
+    pointer-events: none;
+}
+
+.panel {
+    position: absolute;
+    inset: 0;
+}
+
+.stage video,
+.stage canvas,
+.stage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
+    display: block;
+    background: transparent;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.stage .mirror {
+    transform: scaleX(-1);
+}
+
+.busy {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.72);
+    color: #24292e;
+    text-align: center;
+    pointer-events: none;
+}
+
+.busy p {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 500;
+}
+
+.busy-spin {
+    width: 36px;
+    height: 36px;
+    border: 3px solid #d0d7de;
+    border-top-color: #0366d6;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.dock .file-btn.busy {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.dock {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 12px 16px 12px;
+    position: relative;
+    z-index: 5;
+}
+
+.tabs {
+    display: flex;
+    flex-shrink: 0;
+    border-top: 1px solid #e1e4e8;
+    position: relative;
+    z-index: 5;
+}
+
+.tabs button {
+    flex: 1;
+    min-height: 48px;
+    padding: 10px 8px;
+    border: 0;
+    background: transparent;
+    color: #586069;
+    font-family: inherit;
+    font-size: 0.95rem;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    white-space: nowrap;
+}
+
+.tabs button.active {
+    color: #0366d6;
+    font-weight: 500;
+    box-shadow: inset 0 -2px 0 #0366d6;
+}
+
+.dock button,
+.dock .file-btn {
+    flex: 1;
+    min-height: 48px;
+    padding: 10px 16px;
+    border: 1px solid #0366d6;
+    border-radius: 8px;
+    background: #0366d6;
+    color: #fff;
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dock button.secondary,
+.dock .file-btn {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    color: #0366d6;
+}
+
+.dock .file-btn input {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: pointer;
+    font-size: 4rem;
+}
+
+.dock button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.dock button.hidden {
+    display: none;
+}
+
+.dock .model-pick {
+    flex: 1 1 100%;
+    position: relative;
+    display: flex;
+}
+
+.dock .model-pick select {
+    flex: 1;
+    min-height: 48px;
+    padding: 10px 16px;
+    padding-inline-end: 36px;
+    border: 1px solid #0366d6;
+    border-radius: 8px;
+    background: transparent;
+    color: #0366d6;
+    font-family: inherit;
+    font-size: 0.85rem;
+    text-align: left;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    appearance: none;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.dock .model-pick::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    inset-inline-end: 16px;
+    width: 8px;
+    height: 8px;
+    border-inline-end: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    color: #0366d6;
+    transform: translateY(-70%) rotate(45deg);
+    pointer-events: none;
+}
+
+@media (min-width: 720px) {
+    html, body {
+        background: #f6f8fa;
+    }
+
+    .app {
+        max-width: 26rem;
+        height: min(100dvh, 52rem);
+        margin: max(0px, calc((100dvh - 52rem) / 2)) auto;
+        background: #fff;
+        box-shadow: 0 0 0 1px #e1e4e8;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html, body {
+        background: #1e1e1e;
+        color: #ddd;
+    }
+
+    .bar h1 {
+        color: #ddd;
+    }
+
+    .bar .back {
+        color: #98d6f6;
+    }
+
+    .stage {
+        background: #111;
+        border-color: #333;
+    }
+
+    .busy {
+        background: rgba(17, 17, 17, 0.72);
+        color: #ddd;
+    }
+
+    .busy-spin {
+        border-color: #49494d;
+        border-top-color: #98d6f6;
+    }
+
+    .bar .hint {
+        color: #97a1b2;
+    }
+
+    .tabs {
+        border-color: #333;
+    }
+
+    .tabs button {
+        color: #97a1b2;
+    }
+
+    .tabs button.active {
+        color: #98d6f6;
+        box-shadow: inset 0 -2px 0 #98d6f6;
+    }
+
+    .dock button {
+        background: #98d6f6;
+        border-color: #98d6f6;
+        color: #1e1e1e;
+    }
+
+    .dock button.secondary,
+    .dock .file-btn {
+        background: transparent;
+        color: #98d6f6;
+        border-color: #49494d;
+    }
+
+    .dock .model-pick select {
+        color: #98d6f6;
+        border-color: #49494d;
+        background: #1e1e1e;
+    }
+
+    .dock .model-pick::after {
+        color: #98d6f6;
+    }
+
+    @media (min-width: 720px) {
+        html, body {
+            background: #111;
+        }
+
+        .app {
+            background: #1e1e1e;
+            box-shadow: 0 0 0 1px #333;
+        }
+    }
+}

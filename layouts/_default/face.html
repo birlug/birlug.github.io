@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+	<meta name="theme-color" content="#1e1e1e" media="(prefers-color-scheme: dark)">
+	<meta name="mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="default">
+	<meta name="apple-mobile-web-app-title" content="{{ .Title }}">
+	<title>{{ .Title }}</title>
+	<link rel="icon" href="{{ "favicon.ico" | relURL }}">
+	<link rel="stylesheet" href="{{ "face/face.css" | relURL }}?v=tabs17">
+</head>
+<body>
+	<div class="app">
+		<header class="bar">
+			<a class="back" href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a>
+			<h1>{{ .Title }}</h1>
+			<div class="hint" id="hint">{{ .Content }}</div>
+		</header>
+
+		<div class="stage">
+			<div class="panel" id="live-stage">
+				<video id="webcam" autoplay muted playsinline webkit-playsinline></video>
+				<canvas id="live-canvas"></canvas>
+			</div>
+			<div class="panel hidden" id="paint-stage">
+				<img id="still" class="hidden" alt="">
+				<canvas id="paint-canvas"></canvas>
+				<div class="busy hidden" id="paint-busy">
+					<div class="busy-spin"></div>
+					<p id="paint-busy-text">در حال پردازش تصویر… چند ثانیه صبر کنید</p>
+				</div>
+			</div>
+		</div>
+
+		<footer class="dock" id="live-dock">
+			<button id="start-btn" type="button">شروع دوربین</button>
+			<button id="flip-btn" class="secondary hidden" type="button">تعویض دوربین</button>
+			<label class="model-pick" dir="ltr">
+				<select id="live-model">
+					<option value="yunet" selected>YuNet</option>
+					<option value="mediapipe">MediaPipe Face Landmarker</option>
+				</select>
+			</label>
+		</footer>
+
+		<footer class="dock hidden" id="paint-dock">
+			<label class="file-btn" id="file-btn">
+				انتخاب تصویر
+				<input id="file-input" type="file" accept="image/*">
+			</label>
+		</footer>
+
+		<nav class="tabs">
+			<button type="button" data-tab="live" class="active">دوربین</button>
+			<button type="button" data-tab="paint">آپلود</button>
+		</nav>
+	</div>
+	<script type="module" src="{{ "face/app.js" | relURL }}?v=tabs17"></script>
+</body>
+</html>
