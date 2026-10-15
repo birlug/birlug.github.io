@@ -42,9 +42,9 @@ const STATUS = {
   yunetLoading: "در حال بارگذاری YuNet…",
   yunetReady: "YuNet آماده است.",
   yunetFail: "بارگذاری YuNet شکست خورد.",
-  owlLoading: "در حال بارگذاری مدل آپلود…",
-  owlReady: "مدل آپلود آماده است.",
-  owlFail: "بارگذاری مدل آپلود شکست خورد."
+  owlLoading: "در حال بارگذاری مدل تصویر…",
+  owlReady: "مدل تصویر آماده است.",
+  owlFail: "بارگذاری مدل تصویر شکست خورد."
 };
 
 let tab = "live";
@@ -109,12 +109,12 @@ function stopStream() {
 
 function liveHint() {
   if (liveModel === "yunet") {
-    if (loadingYunet) return STATUS.yunetLoading;
     if (yunetSession) return STATUS.yunetReady;
+    if (loadingYunet) return STATUS.yunetLoading;
     return "";
   }
-  if (loadingLandmarker) return STATUS.mediapipeLoading;
   if (faceLandmarker) return STATUS.mediapipeReady;
+  if (loadingLandmarker) return STATUS.mediapipeLoading;
   return "";
 }
 
@@ -202,9 +202,11 @@ async function initLandmarker() {
       } catch {
         faceLandmarker = await createLandmarker("CPU");
       }
+      loadingLandmarker = false;
       showLiveHint();
     } catch (err) {
       landmarkerReady = null;
+      loadingLandmarker = false;
       if (tab === "live" && liveModel === "mediapipe") setHint(STATUS.mediapipeFail);
       throw err;
     } finally {
@@ -236,10 +238,12 @@ async function initYunet() {
       yunetSession = await ort.InferenceSession.create(YUNET_URL, {
         executionProviders: ["wasm"]
       });
+      loadingYunet = false;
       showLiveHint();
     } catch (err) {
       yunetReady = null;
       yunetSession = null;
+      loadingYunet = false;
       if (tab === "live" && liveModel === "yunet") setHint(STATUS.yunetFail);
       throw err;
     } finally {

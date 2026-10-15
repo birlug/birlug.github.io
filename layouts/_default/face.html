@@ -11,7 +11,7 @@
 	<meta name="apple-mobile-web-app-title" content="{{ .Title }}">
 	<title>{{ .Title }}</title>
 	<link rel="icon" href="{{ "favicon.ico" | relURL }}">
-	<link rel="stylesheet" href="{{ "face/face.css" | relURL }}?v=tabs17">
+	<link rel="stylesheet" href="{{ "face/face.css" | relURL }}?v=tabs22">
 </head>
 <body>
 	<div class="app">
@@ -20,6 +20,7 @@
 			<h1>{{ .Title }}</h1>
 			<div class="hint" id="hint">{{ .Content }}</div>
 		</header>
+		<p class="privacy">تصاویر جایی ارسال نمی‌شن و روی دستگاه خودتون پردازش می‌شه</p>
 
 		<div class="stage">
 			<div class="panel" id="live-stage">
@@ -56,9 +57,9 @@
 
 		<nav class="tabs">
 			<button type="button" data-tab="live" class="active">دوربین</button>
-			<button type="button" data-tab="paint">آپلود</button>
+			<button type="button" data-tab="paint">تصویر</button>
 		</nav>
 	</div>
-	<script type="module" src="{{ "face/app.js" | relURL }}?v=tabs17"></script>
+	<script type="module" src="{{ "face/app.js" | relURL }}?v=tabs22"></script>
 </body>
 </html>
