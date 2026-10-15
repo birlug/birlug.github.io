@@ -647,16 +647,58 @@ async function initOwl() {
   setHint(STATUS.owlLoading);
   owlReady = (async () => {
     const nativeFetch = globalThis.fetch.bind(globalThis);
+    async function readPart(url, onChunk) {
+      const res = await nativeFetch(url);
+      if (!res.ok) throw new Error(`failed to load ${url}`);
+      const total = Number(res.headers.get("content-length")) || 0;
+      if (!res.body || !res.body.getReader) {
+        const buffer = await res.arrayBuffer();
+        onChunk(buffer.byteLength, total || buffer.byteLength);
+        return buffer;
+      }
+      const reader = res.body.getReader();
+      const pieces = [];
+      let received = 0;
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        pieces.push(value);
+        received += value.byteLength;
+        onChunk(value.byteLength, total);
+      }
+      const joined = new Uint8Array(received);
+      let offset = 0;
+      for (const piece of pieces) {
+        joined.set(piece, offset);
+        offset += piece.byteLength;
+      }
+      return joined.buffer;
+    }
     globalThis.fetch = async (input, init) => {
       const url = String(typeof input === "string" ? input : input && input.url || "");
       if (url.includes("/onnx/model_quantized.onnx") && !url.includes(".part")) {
         const base = new URL("models/Xenova/owlvit-base-patch32/onnx/", import.meta.url);
         const chunks = [];
+        let loaded = 0;
+        let total = 0;
+        const known = [];
         for (const part of OWL_ONNX_PARTS) {
-          const res = await nativeFetch(new URL(part, base).href);
-          if (!res.ok) throw new Error(`failed to load ${part}`);
-          chunks.push(await res.arrayBuffer());
+          const partUrl = new URL(part, base).href;
+          const head = await nativeFetch(partUrl, { method: "HEAD" }).catch(() => null);
+          known.push(Number(head && head.headers.get("content-length")) || 0);
         }
+        total = known.reduce((sum, size) => sum + size, 0);
+        for (const part of OWL_ONNX_PARTS) {
+          const buffer = await readPart(new URL(part, base).href, (bytes, partTotal) => {
+            loaded += bytes;
+            if (!total && partTotal) total = partTotal * OWL_ONNX_PARTS.length;
+            if (tab !== "paint") return;
+            const pct = total ? Math.min(99, Math.round((loaded / total) * 100)) : 0;
+            setHint(`${STATUS.owlLoading} ${pct}٪`);
+          });
+          chunks.push(buffer);
+        }
+        if (tab === "paint") setHint(`${STATUS.owlLoading} 100٪`);
         return new Response(new Blob(chunks), {
           headers: { "Content-Type": "application/octet-stream" }
         });
@@ -673,13 +715,7 @@ async function initOwl() {
       env.backends.onnx.wasm.proxy = false;
       env.backends.onnx.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/";
       owlDetector = await pipeline("zero-shot-object-detection", OWL_MODEL, {
-        quantized: true,
-        progress_callback(progress) {
-          if (tab !== "paint") return;
-          if (progress.status === "progress" && progress.file) {
-            setHint(`${STATUS.owlLoading} ${Math.round(progress.progress || 0)}٪`);
-          }
-        }
+        quantized: true
       });
       if (tab === "paint" && !checking) setHint(STATUS.owlReady);
     } catch (err) {
