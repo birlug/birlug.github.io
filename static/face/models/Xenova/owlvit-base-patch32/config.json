@@ -1,0 +1,25 @@
+{
+  "_name_or_path": "google/owlvit-base-patch32",
+  "architectures": [
+    "OwlViTForObjectDetection"
+  ],
+  "initializer_factor": 1.0,
+  "logit_scale_init_value": 2.6592,
+  "model_type": "owlvit",
+  "projection_dim": 512,
+  "text_config": {
+    "bos_token_id": 0,
+    "dropout": 0.0,
+    "eos_token_id": 2,
+    "max_length": 16,
+    "model_type": "owlvit_text_model",
+    "pad_token_id": 1
+  },
+  "text_config_dict": null,
+  "transformers_version": "4.36.0.dev0",
+  "vision_config": {
+    "dropout": 0.0,
+    "model_type": "owlvit_vision_model"
+  },
+  "vision_config_dict": null
+}

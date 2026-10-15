@@ -8,6 +8,8 @@ const YUNET_MAX_SIDE = 320;
 const YUNET_SCORE = 0.6;
 const YUNET_NMS = 0.3;
 const OWL_MODEL = "Xenova/owlvit-base-patch32";
+const OWL_LOCAL = new URL("models/", import.meta.url).href;
+const OWL_ONNX_PARTS = ["model_quantized.onnx.part0", "model_quantized.onnx.part1"];
 const OWL_LABELS = ["a human face", "a painted face", "a drawn face", "a smiley face"];
 const MAX_FACES = 3;
 const MIN_FACE_SIZE = 0.14;
@@ -611,11 +613,29 @@ async function initOwl() {
   loadingOwl = true;
   setHint(STATUS.owlLoading);
   owlReady = (async () => {
+    const nativeFetch = globalThis.fetch.bind(globalThis);
+    globalThis.fetch = async (input, init) => {
+      const url = String(typeof input === "string" ? input : input && input.url || "");
+      if (url.includes("/onnx/model_quantized.onnx") && !url.includes(".part")) {
+        const base = new URL("models/Xenova/owlvit-base-patch32/onnx/", import.meta.url);
+        const chunks = [];
+        for (const part of OWL_ONNX_PARTS) {
+          const res = await nativeFetch(new URL(part, base).href);
+          if (!res.ok) throw new Error(`failed to load ${part}`);
+          chunks.push(await res.arrayBuffer());
+        }
+        return new Response(new Blob(chunks), {
+          headers: { "Content-Type": "application/octet-stream" }
+        });
+      }
+      return nativeFetch(input, init);
+    };
     try {
       const { pipeline, env } = await import(TRANSFORMERS_URL);
-      env.allowLocalModels = false;
-      env.allowRemoteModels = true;
+      env.allowLocalModels = true;
+      env.allowRemoteModels = false;
       env.useBrowserCache = true;
+      env.localModelPath = OWL_LOCAL;
       env.backends.onnx.wasm.numThreads = 1;
       env.backends.onnx.wasm.proxy = false;
       env.backends.onnx.wasm.wasmPaths = "https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2/dist/";
@@ -635,6 +655,7 @@ async function initOwl() {
       if (tab === "paint") setHint(STATUS.owlFail);
       throw err;
     } finally {
+      globalThis.fetch = nativeFetch;
       loadingOwl = false;
     }
   })();
