@@ -358,13 +358,38 @@ async function detectYunetFrame() {
   }
 }
 
-async function getCameraStream(facing) {
+function labelFacing(label) {
+  const text = (label || "").toLowerCase();
+  if (/back|rear|environment|world/.test(text)) return "environment";
+  if (/front|user|selfie/.test(text)) return "user";
+  return "";
+}
+
+async function chooseCameraId(facing) {
+  if (!navigator.mediaDevices?.enumerateDevices) return "";
+  const devices = (await navigator.mediaDevices.enumerateDevices()).filter((device) => device.kind === "videoinput");
+  if (!devices.length) return "";
+  const match = devices.find((device) => labelFacing(device.label) === facing);
+  if (match) return match.deviceId;
+  if (devices.length > 1) {
+    return facing === "environment" ? devices[devices.length - 1].deviceId : devices[0].deviceId;
+  }
+  return "";
+}
+
+async function getCameraStream(facing, any) {
   if (!window.isSecureContext) throw new Error("secure context required");
   if (!navigator.mediaDevices?.getUserMedia) throw new Error("no camera");
-  const attempts = [
-    { audio: false, video: { facingMode: { ideal: facing } } },
-    { audio: false, video: true }
-  ];
+  const deviceId = await chooseCameraId(facing);
+  const attempts = [];
+  if (deviceId) {
+    attempts.push({ audio: false, video: { deviceId: { exact: deviceId } } });
+    attempts.push({ audio: false, video: { deviceId } });
+  }
+  attempts.push({ audio: false, video: { facingMode: { exact: facing } } });
+  attempts.push({ audio: false, video: { facingMode: facing } });
+  attempts.push({ audio: false, video: { facingMode: { ideal: facing } } });
+  if (any) attempts.push({ audio: false, video: true });
   let lastError;
   for (const constraints of attempts) {
     try {
@@ -376,11 +401,19 @@ async function getCameraStream(facing) {
   throw lastError;
 }
 
-async function startWebcam() {
-  const stream = await getCameraStream(facingMode);
-  stopStream();
-  video.srcObject = stream;
+function applyStreamFacing(stream) {
+  const track = stream.getVideoTracks()[0];
+  const mode = track && track.getSettings && track.getSettings().facingMode;
+  if (mode === "user" || mode === "environment") facingMode = mode;
   syncMirror();
+}
+
+async function startWebcam(any) {
+  stopStream();
+  await new Promise((resolve) => setTimeout(resolve, 40));
+  const stream = await getCameraStream(facingMode, any);
+  video.srcObject = stream;
+  applyStreamFacing(stream);
   if (video.readyState < 1) {
     await new Promise((resolve) => {
       video.onloadedmetadata = resolve;
@@ -516,7 +549,7 @@ async function startLive() {
   starting = true;
   startBtn.textContent = "در حال شروع...";
   try {
-    await startWebcam();
+    await startWebcam(true);
     running = true;
     startBtn.textContent = "توقف";
     flipBtn.classList.remove("hidden");
@@ -739,9 +772,10 @@ flipBtn.addEventListener("click", async () => {
   if (!running) return;
   facingMode = facingMode === "user" ? "environment" : "user";
   try {
-    await startWebcam();
+    await startWebcam(false);
   } catch {
     facingMode = facingMode === "user" ? "environment" : "user";
+    syncMirror();
   }
 });
 
