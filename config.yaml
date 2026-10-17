@@ -1,4 +1,6 @@
 baseURL: "https://birlug.github.io/"
+# Rebase root-relative HTML links without rewriting historical Markdown.
+canonifyURLs: true
 locale: fa-IR
 defaultContentLanguage: fa
 title: "لاگ بیرجند"

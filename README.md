@@ -17,6 +17,9 @@ python tools/content.py
 hugo server
 ```
 
+CI reads the actual site URL with actions/configure-pages and passes it to Hugo, supporting both custom-domain roots and fork project paths such as https://saeed0920.github.io/birlug.github.io/. Hugo canonifies generated HTML links; published Markdown stays unchanged. The site checker infers this root from the homepage canonical URL, or accepts --base-url explicitly.
+Historical embedded JavaScript/CSS (for example the challenge 11 VM) retains its original root-only paths; this does not claim full VM compatibility on fork subpaths.
+
 The sibling media checkout is required before building:
 
 ```text

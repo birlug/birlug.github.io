@@ -1,6 +1,6 @@
 {{ define "main" }}
 {{ partial "page-header.html" (dict "title" "جست‌وجو" "path" "search") }}
-<form class="search-form" action="{{ "/search/" | relURL }}" data-search data-index="{{ "search-index.json" | relURL }}">
+<form class="search-form" action="{{ "/search/" | relURL }}" data-search data-index="{{ "search-index.json" | absURL }}">
 <label for="query">عبارت جست‌وجو</label><div class="search-controls"><input class="input" id="query" name="q" type="search" maxlength="200" autocomplete="off"><button class="btn btn-primary" type="submit">{{ partial "icon.html" "search" }} جست‌وجو</button></div>
 </form>
 <p class="meta" data-search-status role="status" aria-live="polite">عبارت موردنظر را وارد کنید</p><ol class="rows" data-results></ol>

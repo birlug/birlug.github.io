@@ -1,6 +1,6 @@
-@font-face{font-family:Vazirmatn;src:url('{{ "fonts/Vazirmatn.woff2" | relURL }}') format('woff2');font-weight:400 500;font-style:normal;font-display:swap}
-@font-face{font-family:'BirLUG Mono';src:url('{{ "fonts/BirLUGMono-Regular.woff2" | relURL }}') format('woff2');font-weight:400;font-style:normal;font-display:swap}
-@font-face{font-family:'BirLUG Mono';src:url('{{ "fonts/BirLUGMono-Medium.woff2" | relURL }}') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:Vazirmatn;src:url('{{ "fonts/Vazirmatn.woff2" | absURL }}') format('woff2');font-weight:400 500;font-style:normal;font-display:swap}
+@font-face{font-family:'BirLUG Mono';src:url('{{ "fonts/BirLUGMono-Regular.woff2" | absURL }}') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'BirLUG Mono';src:url('{{ "fonts/BirLUGMono-Medium.woff2" | absURL }}') format('woff2');font-weight:500;font-style:normal;font-display:swap}
 :root{
  --color-canvas:#121212;--color-surface:#242424;--color-text:#FAFAFA;--color-text-2:#B4B4B4;--color-text-3:#898989;
  --color-line:#2E2E2E;--color-line-strong:#393939;--color-accent:#3ECF8E;--color-on-accent:#121212;

@@ -3,6 +3,7 @@
 import argparse
 from html.parser import HTMLParser
 import json
+import os
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit, unquote
@@ -15,13 +16,16 @@ class HTML(HTMLParser):
         self.images = []
         self.icons = []
         self.root = None
+        self.canonical = None
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if tag == "html":
             self.root = attrs
+        if tag == "link" and attrs.get("rel") == "canonical":
+            self.canonical = attrs.get("href")
         if attrs.get("id"):
             self.ids.add(attrs["id"])
-        for key in ("href", "src"):
+        for key in ("href", "src", "data-index"):
             if attrs.get(key):
                 self.references.append(attrs[key])
         if attrs.get("srcset"):
@@ -34,6 +38,7 @@ class HTML(HTMLParser):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("public", type=Path)
+    parser.add_argument("--base-url", help="Deployment root; defaults to homepage canonical URL")
     args = parser.parse_args()
     root = args.public.resolve()
     errors = []
@@ -43,6 +48,14 @@ def main():
         html = HTML()
         html.feed(file.read_text())
         pages[file] = html
+    home = pages.get(root / "index.html")
+    site = urlsplit(args.base_url or (home.canonical if home else None) or "http://localhost/")
+    if site.scheme not in ("http", "https") or not site.netloc or site.query or site.fragment:
+        parser.error("Base URL must be an HTTP(S) site root without query or fragment")
+    prefix = site.path.rstrip("/") + "/"
+    if home and home.canonical and home.canonical.rstrip("/") != site.geturl().rstrip("/"):
+        parser.error("Homepage canonical URL does not match deployment root")
+    media = urlsplit(os.environ.get("HUGO_PARAMS_MEDIABASEURL", ""))
     for file, html in pages.items():
         relative = file.relative_to(root).as_posix()
         # Historical standalone games/pages are deliberately byte-preserved.
@@ -50,12 +63,19 @@ def main():
             continue
         if not html.root or html.root.get("dir") != "rtl" or html.root.get("lang") != "fa":
             errors.append(f"{relative}: missing Persian RTL root")
-        base = "/" + relative
+        base = prefix + relative
         for reference in html.references:
             url = urlsplit(urljoin(base, reference))
-            if url.scheme or url.netloc or reference.startswith("data:"):
+            if url.scheme not in ("", "http", "https") or (url.netloc and url.netloc != site.netloc):
                 continue
-            path = root / unquote(url.path).lstrip("/")
+            # Same-origin media can belong to a separate Pages deployment.
+            if (media.netloc and (url.scheme or site.scheme, url.netloc or site.netloc) == (media.scheme, media.netloc)
+                    and url.path.startswith(media.path.rstrip("/") + "/media/")):
+                continue
+            if not url.path.startswith(prefix):
+                errors.append(f"{relative}: reference outside deployment root: {reference}")
+                continue
+            path = root / unquote(url.path[len(prefix):])
             if path.is_dir():
                 path /= "index.html"
             if not path.is_file():

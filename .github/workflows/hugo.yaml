@@ -19,6 +19,9 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
     defaults:
       run:
         working-directory: site
@@ -29,6 +32,9 @@ jobs:
       - uses: actions/checkout@v7
         with:
           path: site
+      - name: Read Pages URL
+        id: pages
+        uses: actions/configure-pages@v6
       - name: Checkout media
         uses: actions/checkout@v7
         with:
@@ -53,12 +59,14 @@ jobs:
           (cd /tmp && grep " ${archive}$" hugo-checksums.txt | sha256sum --check -)
           tar -xzf "/tmp/${archive}" -C /tmp hugo
       - name: Validate and build
+        env:
+          PAGES_BASE_URL: ${{ steps.pages.outputs.base_url }}
         run: |
           test -d ../birlug-media/public/media
           cp ../birlug-media/public/catalog.json data/media.json
           python tools/content.py
-          /tmp/hugo --gc --minify --panicOnWarning --cleanDestinationDir
-          python tools/check_site.py public
+          /tmp/hugo --baseURL "${PAGES_BASE_URL%/}/" --gc --minify --panicOnWarning --cleanDestinationDir
+          python tools/check_site.py public --base-url "${PAGES_BASE_URL%/}/"
       - uses: actions/upload-pages-artifact@v5
         if: github.event_name != 'pull_request'
         with:
