@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{{ if not .Params.externalURL }}{{ errorf "External layout requires externalURL" }}{{ end }}
+{{ $target := partial "page-url.html" . }}
+<meta http-equiv="refresh" content="0; url={{ $target }}">
+<link rel="canonical" href="{{ $target }}">
+<title>{{ .Title }}</title>
+</head>
+<body><a href="{{ $target }}">{{ .Title }}</a></body>
+</html>

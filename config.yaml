@@ -1,39 +1,51 @@
-baseURL: "https://birlug.github.io"
-languageCode: "fa-ir"
+baseURL: "https://birlug.github.io/"
+# Rebase root-relative HTML links without rewriting historical Markdown.
+canonifyURLs: true
+locale: fa-IR
+defaultContentLanguage: fa
 title: "لاگ بیرجند"
-theme: "tehlug-hugo-theme"
-paginate: 3
-favicon: static/favicon.ico
-
+timeZone: Asia/Tehran
+pagination:
+  pagerSize: 12
 params:
   subtitle: "گروه کاربران گنو/لینوکس بیرجند"
-  mapView: 0.002
-  mode: "auto"
-
-  mainSections: [event]
-
+  # Empty => local media mount. Set HUGO_PARAMS_MEDIABASEURL after media deployment.
+  mediaBaseURL: ""
+  analytics: true
   menu:
     items:
-      [
-        { title: "جلسات", url: "/events", name: "events" },
-        { title: "موضوعات", url: "/topics", name: "topics" },
-        { title: "ارائه دهندگان", url: "/speakers", name: "speakers" },
-        { title: "تصاویر", url: "/images", name: "images" },
-        { title: "چالش‌ها *", url: "/~challenge", name: "challenges" },
-        { title: "بلاگ", url: "/~blog", name: "blog" },
-        { title: "حمایت مالی", url: "/donation", name: "donation" },
-      ]
-
+      - {title: "جلسات", url: "/", name: "events", icon: "calendar-days"}
+      - {title: "گالری", url: "/images/", name: "images", icon: "images"}
+      - {title: "چالش‌ها", url: "/~challenge/", name: "~challenge", icon: "puzzle"}
+      - {title: "بلاگ", url: "/~blog/", name: "~blog", icon: "notebook-pen"}
+      - {title: "موضوعات", url: "/topics/", name: "topics", icon: "tags"}
+      - {title: "ارائه‌دهندگان", url: "/speakers/", name: "speakers", icon: "users"}
+      - {title: "حمایت مالی", url: "/donation/", name: "donation", icon: "heart-handshake"}
   footer:
     items:
-      [
-        { title: "گیت‌هاب", url: "https://github.com/birlug" },
-        { title: "تلگرام", url: "https://t.me/birlug" },
-        { title: "اینستاگرم", url: "https://instagram.com/birjandlug" },
-        { title: "ایوند", url: "https://evand.com/organizations/birlug" },
-      ]
-
+      - {title: "گیت‌هاب", url: "https://github.com/birlug"}
+      - {title: "تلگرام", url: "https://t.me/birlug"}
+      - {title: "اینستاگرام", url: "https://instagram.com/birjandlug"}
+      - {title: "ایوند", url: "https://evand.com/organizations/birlug"}
 taxonomies:
-  topics: "topics"
-  speakers: "speakers"
-  locations: "locations"
+  topics: topics
+  speakers: speakers
+  locations: locations
+outputs:
+  home: [HTML, RSS, Search]
+  page: [HTML]
+outputFormats:
+  Search:
+    mediaType: application/json
+    baseName: search-index
+    isPlainText: true
+module:
+  mounts:
+    - source: static
+      target: static
+    - source: ../birlug-media/public/media
+      target: static/media
+markup:
+  highlight:
+    noClasses: false
+    style: bw

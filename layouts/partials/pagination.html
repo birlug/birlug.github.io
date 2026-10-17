@@ -1,0 +1,5 @@
+{{ if gt .TotalPages 1 }}<nav class="pagination" aria-label="صفحه‌بندی">
+{{ if .HasPrev }}<a href="{{ .Prev.URL }}">{{ partial "icon.html" "arrow-right" }} صفحه‌ی جدیدتر</a>{{ end }}
+<span class="meta">صفحه‌ی {{ partial "number.html" .PageNumber }} از {{ partial "number.html" .TotalPages }}</span>
+{{ if .HasNext }}<a href="{{ .Next.URL }}">صفحه‌ی قدیمی‌تر {{ partial "icon.html" "arrow-left" }}</a>{{ end }}
+</nav>{{ end }}

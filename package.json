@@ -1,0 +1,10 @@
+{
+  "name": "birlug-site-tools",
+  "private": true,
+  "scripts": {
+    "icons": "node tools/build-icons.mjs"
+  },
+  "devDependencies": {
+    "@iconify-json/lucide": "1.2.145"
+  }
+}

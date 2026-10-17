@@ -1,0 +1,4 @@
+<li class="post-row">
+<span class="meta">{{ with .Params.persianDate }}<bdi>{{ partial "number.html" . }}</bdi>{{ end }}{{ with .Params.author }} · {{ . }}{{ end }}</span>
+<h2><a href="{{ partial "page-url.html" . }}">{{ .Title }}</a></h2><p>{{ .Description | default .Summary | plainify | truncate 200 }}</p>
+</li>

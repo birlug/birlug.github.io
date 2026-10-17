@@ -1,0 +1,5 @@
+{{ define "main" }}
+{{ partial "page-header.html" (dict "title" .Title "path" (.Section | default .File.ContentBaseName)) }}
+{{ with .Params.persianDate }}<span class="meta"><bdi>{{ partial "number.html" . }}</bdi></span>{{ end }}
+<div class="prose">{{ .Content }}</div>
+{{ end }}

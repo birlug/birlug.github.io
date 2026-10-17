@@ -1,0 +1,6 @@
+{{ define "main" }}
+{{ $title := .Title }}{{ if and (eq .Data.Plural "speakers") (eq .Title "-") }}{{ $title = "[نام ارائه‌دهنده ثبت نشده]" }}{{ end }}
+{{ partial "page-header.html" (dict "title" $title "path" .Data.Plural) }}
+<nav class="filters" aria-label="موضوعات"><a class="pill" href="{{ printf "/%s/" .Data.Plural | relURL }}">همه</a><span class="pill" aria-current="page">{{ .Title }}</span></nav>
+{{ $paginator := .Paginate .RegularPages.ByDate.Reverse }}<ol class="rows">{{ range $paginator.Pages }}{{ if eq .Type "event" }}{{ partial "session-row.html" . }}{{ else }}{{ partial "post-row.html" . }}{{ end }}{{ end }}</ol>{{ partial "pagination.html" $paginator }}
+{{ end }}

@@ -1,0 +1,15 @@
+<aside class="sidebar" aria-label="لاگ بیرجند">
+<a class="wordmark" href="{{ "/" | relURL }}"><span class="mono accent" dir="ltr">{{ partial "icon.html" "terminal" }} BirLUG</span><span class="meta">{{ .Site.Params.subtitle }}</span></a>
+<nav class="main-nav" aria-label="منوی اصلی">
+{{ $page := . }}
+{{ range .Site.Params.menu.items }}
+{{ $active := or (and (eq .name "events") (or $page.IsHome (and (eq $page.Section "events") (ne $page.Layout "gallery")))) (and (eq .name "images") (or (eq $page.Layout "gallery") (eq $page.Layout "images"))) (and (ne .name "events") (ne .name "images") (hasPrefix $page.RelPermalink .url)) }}
+<a href="{{ .url | relURL }}"{{ if $active }} aria-current="page"{{ end }}>{{ partial "icon.html" .icon }}<span>{{ .title }}</span></a>
+{{ end }}
+</nav>
+<div class="community">
+<span class="meta">جامعه</span>
+<div class="community-links">{{ range .Site.Params.footer.items }}<a href="{{ .url }}">{{ .title }}</a>{{ end }}<a href="{{ "index.xml" | relURL }}" dir="ltr">RSS</a></div>
+<div class="community-links"><a href="{{ "search/" | relURL }}">{{ partial "icon.html" "search" }} جست‌وجو</a></div>
+</div>
+</aside>

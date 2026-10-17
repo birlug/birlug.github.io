@@ -1,0 +1,8 @@
+{{- with .Params.externalURL -}}
+  {{- $url := urls.Parse . -}}
+  {{- if or (ne $url.Scheme "https") (not $url.Host) $url.User -}}
+    {{- errorf "externalURL must be public HTTPS without credentials" -}}
+  {{- end -}}
+  {{- return . -}}
+{{- end -}}
+{{- return .Permalink -}}
