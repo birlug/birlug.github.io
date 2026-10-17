@@ -1,0 +1,6 @@
+{{ define "main" }}
+{{ partial "page-header.html" (dict "title" .Title "path" (.Section | default "support")) }}
+{{ with .Params.persianDate }}<span class="meta"><bdi>{{ partial "number.html" . }}</bdi></span>{{ end }}
+<div class="prose">{{ .Content }}</div>
+{{ with .GetTerms "topics" }}<nav class="filters" aria-label="موضوعات نوشته">{{ range . }}<a class="pill" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</nav>{{ end }}
+{{ end }}

@@ -1,0 +1,11 @@
+<template id="gallery-lightbox">
+<dialog class="lightbox" aria-label="نمایش تصویر" aria-describedby="gallery-lightbox-status">
+<img alt="" decoding="async" draggable="false">
+<div class="lightbox-controls">
+<button type="button" data-next aria-label="بعدی">{{ partial "icon.html" "arrow-right" }}</button>
+<p id="gallery-lightbox-status" class="lightbox-status" role="status" aria-live="polite"></p>
+<a data-original target="_blank" rel="noopener noreferrer" aria-label="باز کردن عکس در تب جدید" title="باز کردن عکس در تب جدید">{{ partial "icon.html" "external-link" }}</a>
+<button type="button" data-prev aria-label="قبلی">{{ partial "icon.html" "arrow-left" }}</button>
+</div>
+</dialog>
+</template>

@@ -1,0 +1,6 @@
+{{- $file := path.Clean (printf "static/%s" (strings.TrimPrefix "/" .)) -}}
+{{- if and (strings.HasPrefix $file "static/") (in (slice ".jpg" ".jpeg" ".png" ".gif" ".webp") (strings.ToLower (path.Ext $file))) (fileExists $file) -}}
+  {{- $size := images.Config $file -}}
+  {{- return (dict "width" $size.Width "height" $size.Height) -}}
+{{- end -}}
+{{- return dict -}}

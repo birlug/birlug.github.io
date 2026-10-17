@@ -1,0 +1,7 @@
+{{ define "main" }}
+{{ $key := partial "event-key.html" . }}
+{{ partial "page-header.html" (dict "title" .Title "path" (printf "gallery/%s" $key)) }}
+{{ with .Site.GetPage (printf "/events/%s/info" $key) }}<a href="{{ partial "page-url.html" . }}">{{ partial "icon.html" "arrow-right" }} توضیحات جلسه</a>{{ end }}
+{{ $media := index hugo.Data.media.events $key }}
+{{ with $media.images }}{{ partial "gallery.html" (dict "images" . "page" $) }}{{ else }}<p class="intro">هنوز تصویری برای این جلسه منتشر نشده</p>{{ end }}
+{{ end }}

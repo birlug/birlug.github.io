@@ -1,0 +1,6 @@
+<li class="session-row">
+{{ if findRE "^[0-9]+$" (string .Params.eventNumber) }}<span class="mono meta" dir="ltr">#{{ .Params.eventNumber }}</span>{{ else }}<span class="meta">ویژه</span>{{ end }}
+<div class="row-body"><a class="row-title" href="{{ partial "page-url.html" . }}">{{ .Title }}</a>
+<span class="meta">{{ range $i, $topic := .Params.topics }}{{ if $i }} · {{ end }}<bdi>{{ $topic }}</bdi>{{ end }}{{ with where (.GetTerms "speakers") "LinkTitle" "ne" "-" }} · {{ range $i, $speaker := . }}{{ if $i }}، {{ end }}<bdi>{{ .LinkTitle }}</bdi>{{ end }}{{ end }}</span></div>
+{{ with .Params.eventDate }}<time class="meta" dir="ltr">{{ partial "number.html" . }}</time>{{ end }}
+</li>

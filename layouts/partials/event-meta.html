@@ -1,0 +1,7 @@
+<dl class="meta-list">
+{{ with .Params.eventDate }}<dt>تاریخ</dt><dd><bdi>{{ partial "number.html" . }}</bdi></dd>{{ end }}
+{{ with .Params.startTime }}<dt>ساعت</dt><dd><bdi class="mono" dir="ltr">{{ . }}{{ with $.Params.endTime }} — {{ . }}{{ end }}</bdi></dd>{{ end }}
+{{ with .Params.address }}<dt>مکان</dt><dd>{{ . }}{{ if and $.Params.lat $.Params.lng }}<br><a href="https://www.openstreetmap.org/?mlat={{ $.Params.lat }}&amp;mlon={{ $.Params.lng }}#map=17/{{ $.Params.lat }}/{{ $.Params.lng }}">{{ partial "icon.html" "map-pin" }} مشاهده روی نقشه {{ partial "icon.html" "arrow-left" }}</a>{{ end }}</dd>{{ end }}
+{{ with where (.GetTerms "speakers") "LinkTitle" "ne" "-" }}<dt>ارائه‌دهندگان</dt><dd>{{ range $i, $speaker := . }}{{ if $i }}، {{ end }}<a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</dd>{{ end }}
+{{ with .Params.capacity }}<dt>ظرفیت</dt><dd>{{ partial "number.html" . }} نفر</dd>{{ end }}
+</dl>

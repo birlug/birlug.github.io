@@ -1,0 +1,5 @@
+{{ define "main" }}
+{{ $title := .Title }}{{ if eq .Data.Plural "topics" }}{{ $title = "موضوعات" }}{{ else if eq .Data.Plural "speakers" }}{{ $title = "ارائه‌دهندگان" }}{{ else if eq .Data.Plural "locations" }}{{ $title = "مکان‌ها" }}{{ end }}
+{{ partial "page-header.html" (dict "title" $title "path" .Data.Plural) }}
+<section class="section">{{ range .Data.Terms.ByCount }}{{ if ne .Name "-" }}<div class="taxonomy-row"><h2><a href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }}</a></h2><span class="meta">{{ partial "number.html" .Count }} جلسه و نوشته</span><ul class="rows">{{ range first 3 .Pages.ByDate.Reverse }}<li><a href="{{ partial "page-url.html" . }}">{{ .Title }}</a></li>{{ end }}</ul></div>{{ end }}{{ end }}</section>
+{{ end }}

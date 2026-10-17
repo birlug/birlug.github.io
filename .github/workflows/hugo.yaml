@@ -1,70 +1,79 @@
-name: Deploy birlug.github.io
+name: Deploy BirLUG
 
 on:
   push:
-    branches:
-      - master
-    paths-ignore:
-      - 'README.md'
+    branches: [master]
+    paths-ignore: [README.md, DESIGN.md, SYSTEM-DESIGN.md]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 2 * * *"
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
-defaults:
-  run:
-    shell: bash
+  group: "pages-${{ github.ref }}"
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
     env:
-      HUGO_VERSION: 0.124.0
+      HUGO_VERSION: 0.167.0
+      HUGO_PARAMS_MEDIABASEURL: ${{ vars.MEDIA_BASE_URL }}
     steps:
-      - name: Install Hugo CLI
-        run: |
-          wget -O ${{ runner.temp }}/hugo.deb https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.deb \
-          && sudo dpkg -i ${{ runner.temp }}/hugo.deb          
-      - name: Install Dart Sass
-        run: sudo snap install dart-sass
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
-          submodules: recursive
-          fetch-depth: 0
-      - name: Setup Pages
-        id: pages
-        uses: actions/configure-pages@v4
-      - name: Install Node.js dependencies
-        run: "[[ -f package-lock.json || -f npm-shrinkwrap.json ]] && npm ci || true"
-      - name: Build with Hugo
-        env:
-          HUGO_ENVIRONMENT: production
-          HUGO_ENV: production
-        run: |
-          hugo \
-            --gc \
-            --minify \
-            --baseURL "${{ steps.pages.outputs.base_url }}/"          
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+          path: site
+      - name: Checkout media
+        uses: actions/checkout@v7
         with:
-          path: ./public
+          repository: birlug/media
+          ref: main
+          path: birlug-media
+          token: ${{ secrets.MEDIA_READ_TOKEN || github.token }}
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "24"
+      - name: Install tools
+        run: |
+          python -m pip install -r tools/requirements.txt
+          npm ci --ignore-scripts
+          npm run icons
+          archive="hugo_${HUGO_VERSION}_linux-amd64.tar.gz"
+          curl --fail --location --retry 3 "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/${archive}" -o "/tmp/${archive}"
+          curl --fail --location --retry 3 "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_checksums.txt" -o /tmp/hugo-checksums.txt
+          (cd /tmp && grep " ${archive}$" hugo-checksums.txt | sha256sum --check -)
+          tar -xzf "/tmp/${archive}" -C /tmp hugo
+      - name: Validate and build
+        run: |
+          test -d ../birlug-media/public/media
+          cp ../birlug-media/public/catalog.json data/media.json
+          python tools/content.py
+          /tmp/hugo --gc --minify --panicOnWarning --cleanDestinationDir
+          python tools/check_site.py public
+      - uses: actions/upload-pages-artifact@v5
+        if: github.event_name != 'pull_request'
+        with:
+          path: site/public
 
   deploy:
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
     steps:
-      - name: Deploy to GitHub Pages
+      - uses: actions/deploy-pages@v5
         id: deployment
-        uses: actions/deploy-pages@v4
-
-

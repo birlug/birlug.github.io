@@ -1,0 +1,9 @@
+{{ define "main" }}
+{{ $title := .Title }}{{ if eq .Section "events" }}{{ $title = "آرشیو جلسات" }}{{ else if eq .Section "~challenge" }}{{ $title = "چالش‌ها" }}{{ else if eq .Section "~blog" }}{{ $title = "بلاگ" }}{{ end }}
+{{ partial "page-header.html" (dict "title" $title "path" .Section) }}
+{{ with .Content }}<div class="prose">{{ . }}</div>{{ end }}
+{{ $pages := .RegularPages.ByDate.Reverse }}{{ if eq .Section "events" }}{{ $pages = partial "events.html" . }}{{ end }}
+{{ $paginator := .Paginate $pages }}
+<section class="section"><ol class="rows">{{ range $paginator.Pages }}{{ if eq .Type "event" }}{{ partial "session-row.html" . }}{{ else }}{{ partial "post-row.html" . }}{{ end }}{{ else }}<li class="intro">هنوز نوشته‌ای منتشر نشده</li>{{ end }}</ol>
+{{ partial "pagination.html" $paginator }}</section>
+{{ end }}

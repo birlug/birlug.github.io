@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+{{ partial "header.html" . }}
+<body>
+<a class="skip-link" href="#main">رفتن به محتوا</a>
+<div class="site-shell">
+{{ partial "sidebar.html" . }}
+<main id="main" class="main-content{{ if or (eq .Layout "gallery") (eq .Layout "event") }} main-wide{{ end }}" tabindex="-1" data-pagefind-body>
+{{ block "main" . }}{{ end }}
+</main>
+</div>
+{{ if or (eq .Layout "gallery") (eq .Layout "event") }}{{ partial "lightbox.html" . }}{{ end }}
+</body>
+</html>
