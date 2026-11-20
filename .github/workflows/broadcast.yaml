@@ -1,47 +1,36 @@
 name: Broadcast
-
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        type: choice
-        description: 'choose the environment'
+      event:
+        description: "Event directory slug, e.g. 45 or sfd-1404"
+        type: string
         required: true
-        default: 'test'
-        options:
-          - 'test'
-          - 'production'
-
+      environment:
+        description: "Destination"
+        type: choice
+        options: [test, production]
+        default: test
+        required: true
+permissions:
+  contents: read
 jobs:
   broadcast:
     runs-on: ubuntu-latest
     environment: broadcast
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-      with:
-        fetch-depth: 2
-
-    - name: prepare
-      run: |
-        pip install -r ./tools/requirements.txt
-
-        if [ "${{ github.event.inputs.environment }}" == "test" ]; then
-            echo "setting up test environment"
-            echo "CHAT_ID=${{ vars.TEST_CHAT_ID }}" >> $GITHUB_ENV
-            echo "TEST=1" >> $GITHUB_ENV
-          else
-            echo "setting up production environment"
-            echo "CHAT_ID=${{ vars.CHAT_ID }}" >> $GITHUB_ENV
-            echo "TEST=0" >> $GITHUB_ENV
-          fi
-
-    - name: notify
-      run: ./tools/notify.sh
-      env:
-        TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
-        CHAT_ID: ${{ env.CHAT_ID }}
-        MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
-        MASTODON_URL: ${{ vars.MASTODON_URL }}
-        TEST: ${{ env.TEST }}
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.13"
+      - run: python -m pip install -r tools/requirements.txt
+      - name: Notify
+        env:
+          EVENT: ${{ inputs.event }}
+          TEST: ${{ inputs.environment == 'test' && '1' || '0' }}
+          CHAT_ID: ${{ inputs.environment == 'test' && vars.TEST_CHAT_ID || vars.CHAT_ID }}
+          MEDIA_BASE_URL: ${{ vars.MEDIA_BASE_URL }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          MASTODON_TOKEN: ${{ secrets.MASTODON_TOKEN }}
+          MASTODON_URL: ${{ vars.MASTODON_URL }}
+        run: bash tools/notify.sh

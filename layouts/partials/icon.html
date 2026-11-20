@@ -1,0 +1,9 @@
+{{- $sprite := resources.Get "icons/ui.svg" -}}
+{{- if not $sprite -}}
+  {{- errorf "Iconify sprite missing: run npm ci --ignore-scripts && npm run icons" -}}
+{{- else if not (strings.Contains $sprite.Content (printf "id=\"%s\"" .)) -}}
+  {{- errorf "Unknown local Iconify/Lucide icon: %s" . -}}
+{{- else -}}
+  {{- $sprite = $sprite | fingerprint -}}
+  <svg class="icon" data-icon="lucide:{{ . }}" width="18" height="18" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="{{ $sprite.RelPermalink }}#{{ . }}"></use></svg>
+{{- end -}}

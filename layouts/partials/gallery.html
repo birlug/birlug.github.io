@@ -1,0 +1,11 @@
+<div class="gallery" data-gallery>
+{{ range $i, $image := .images }}
+{{ $last := index $image.variants (sub (len $image.variants) 1) }}
+{{ $alt := $image.alt | default (printf "عکس %s از %s" (partial "number.html" (add $i 1)) $.page.Title) }}
+<a href="{{ partial "media-url.html" (dict "site" $.page.Site "path" $last.jpg) }}" data-gallery-image data-caption="{{ $alt }}" data-credit="{{ $image.credit }}" aria-label="{{ $alt }} — نمایش عکس">
+{{ $sizes := "(max-width: 380px) calc(100vw - 32px), (max-width: 879px) calc((100vw - 38px) / 2), 280px" }}
+{{ if eq $i 0 }}{{ $sizes = "(max-width: 879px) calc(100vw - 32px), 570px" }}{{ end }}
+{{ if eq (len $.images) 1 }}{{ $sizes = "(max-width: 879px) calc(100vw - 32px), 860px" }}{{ end }}
+{{ partial "media-image.html" (dict "image" $image "site" $.page.Site "alt" $alt "sizes" $sizes "eager" (and (eq $.page.Layout "gallery") (eq $i 0))) }}
+</a>{{ end }}
+</div>
