@@ -1,0 +1,15 @@
+{{ define "main" }}
+{{ partial "page-header.html" (dict "title" .Title "path" (printf "sessions/%v" (.Params.eventNumber | default ""))) }}
+<section class="section">{{ partial "event-meta.html" . }}{{ partial "event-actions.html" . }}
+{{ with .GetTerms "topics" }}<nav class="filters" aria-label="موضوعات جلسه">{{ range . }}<a class="pill" href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>{{ end }}</nav>{{ end }}
+</section>
+<div class="prose">{{ .Content }}</div>
+{{ $media := index hugo.Data.media.events (partial "event-key.html" .) }}
+{{ with $media.posters }}<section class="section"><h2>پوستر</h2>{{ range . }}{{ partial "media-image.html" (dict "image" . "site" $.Site "alt" (printf "پوستر %s" $.Title)) }}{{ end }}</section>{{ end }}
+{{ with $media.images }}<section class="section" id="gallery"><h2>گالری جلسه</h2>{{ partial "gallery.html" (dict "images" (first 6 .) "page" $) }}<a class="accent" href="{{ printf "events/%s/gallery/" (partial "event-key.html" $) | relURL }}">همه‌ی عکس‌ها {{ partial "icon.html" "arrow-left" }}</a></section>{{ end }}
+<nav class="related-nav" aria-label="جلسات">
+{{ $events := partial "events.html" . }}{{ $current := .RelPermalink }}
+{{ range $i, $event := $events }}{{ if eq $event.RelPermalink $current }}{{ if lt (add $i 1) (len $events) }}{{ with index $events (add $i 1) }}<a href="{{ partial "page-url.html" . }}">{{ partial "icon.html" "arrow-right" }} {{ .Title }}</a>{{ end }}{{ end }}{{ if gt $i 0 }}{{ with index $events (sub $i 1) }}<a href="{{ partial "page-url.html" . }}">{{ .Title }} {{ partial "icon.html" "arrow-left" }}</a>{{ end }}{{ end }}{{ end }}{{ end }}
+<a href="{{ "/events/" | relURL }}">همه‌ی جلسات</a>
+</nav>
+{{ end }}

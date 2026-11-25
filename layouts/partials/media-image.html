@@ -1,0 +1,5 @@
+{{ $image := .image }}{{ $first := index $image.variants 0 }}{{ $last := index $image.variants (sub (len $image.variants) 1) }}
+<picture class="media-image">
+<source type="image/webp" srcset="{{ range $i, $v := $image.variants }}{{ if $i }}, {{ end }}{{ partial "media-url.html" (dict "site" $.site "path" $v.webp) }} {{ $v.width }}w{{ end }}" sizes="{{ .sizes | default "(max-width: 879px) calc(100vw - 32px), 760px" }}">
+<img src="{{ partial "media-url.html" (dict "site" .site "path" $first.jpg) }}" srcset="{{ range $i, $v := $image.variants }}{{ if $i }}, {{ end }}{{ partial "media-url.html" (dict "site" $.site "path" $v.jpg) }} {{ $v.width }}w{{ end }}" sizes="{{ .sizes | default "(max-width: 879px) calc(100vw - 32px), 760px" }}" width="{{ $last.width }}" height="{{ $last.height }}" alt="{{ $image.alt | default .alt }}" loading="{{ if .eager }}eager{{ else }}lazy{{ end }}"{{ if .eager }} fetchpriority="high"{{ end }} decoding="async">
+</picture>

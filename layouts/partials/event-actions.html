@@ -1,0 +1,7 @@
+{{ $event := index hugo.Data.events (partial "event-key.html" .) }}
+{{ if and $event (ge (time.AsTime $event.start) now) }}
+<div class="actions">
+{{ with .Params.registerLink }}<a class="btn btn-primary" href="{{ . }}" rel="noopener">ثبت‌نام {{ partial "icon.html" "arrow-left" }}</a>{{ end }}
+<a class="btn" href="{{ printf "events/%s/calendar.ics" (partial "event-key.html" .) | relURL }}" download>{{ partial "icon.html" "calendar-plus" }} افزودن به تقویم</a>
+</div>
+{{ end }}

@@ -1,0 +1,18 @@
+{{ define "main" }}
+{{ partial "page-header.html" (dict "title" "جلسات" "path" "sessions") }}
+{{ $events := partial "events.html" . }}
+{{ $future := slice }}{{ $past := slice }}
+{{ range $events }}{{ $meta := index hugo.Data.events (partial "event-key.html" .) }}{{ if and $meta (ge (time.AsTime $meta.start) now) }}{{ $future = $future | append . }}{{ else }}{{ $past = $past | append . }}{{ end }}{{ end }}
+{{ with collections.Reverse $future }}{{ with index . 0 }}
+<section class="section" aria-label="جلسه‌ی بعدی"><span class="meta accent">جلسه‌ی بعدی · <bdi class="mono" dir="ltr">#{{ .Params.eventNumber }}</bdi></span>
+<a class="feature-title" href="{{ partial "page-url.html" . }}">{{ .Title }}</a>
+{{ partial "event-meta.html" . }}{{ partial "event-actions.html" . }}
+</section>
+{{ end }}{{ end }}
+<section class="section" id="archive"><h2>آرشیو جلسات</h2>
+<div class="filters" role="group" aria-label="موضوعات جلسات"><a class="pill" aria-current="page" href="{{ "/events/" | relURL }}">همه</a>{{ range first 5 .Site.Taxonomies.topics.ByCount }}<a class="pill" href="{{ .Page.RelPermalink }}">{{ .Page.LinkTitle }}</a>{{ end }}<a class="pill" href="{{ "/topics/" | relURL }}">همه‌ی موضوعات {{ partial "icon.html" "arrow-left" }}</a></div>
+{{ $paginator := .Paginate $past }}
+<ol class="rows">{{ range $paginator.Pages }}{{ partial "session-row.html" . }}{{ end }}</ol>
+{{ partial "pagination.html" $paginator }}
+</section>
+{{ end }}

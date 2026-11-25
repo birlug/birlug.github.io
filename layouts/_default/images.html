@@ -1,0 +1,9 @@
+{{ define "main" }}
+{{ partial "page-header.html" (dict "title" "گالری" "path" "gallery") }}
+{{ $albums := slice }}{{ range partial "events.html" . }}{{ $media := index hugo.Data.media.events (partial "event-key.html" .) }}{{ if $media.images }}{{ $albums = $albums | append . }}{{ end }}{{ end }}
+{{ $paginator := .Paginate $albums }}
+<section class="gallery-index">{{ range $i, $page := $paginator.Pages }}{{ $media := index hugo.Data.media.events (partial "event-key.html" .) }}{{ $galleryURL := printf "events/%s/gallery/" (partial "event-key.html" .) | relURL }}<article class="album">
+<a href="{{ $galleryURL }}">{{ partial "media-image.html" (dict "image" (index $media.images 0) "site" $.Site "alt" (printf "تصاویر %s" .Title) "sizes" "(max-width: 879px) 120px, 200px" "eager" (eq $i 0)) }}</a>
+<div class="stack"><h2><a href="{{ $galleryURL }}">{{ .Title }}</a></h2><span class="meta"><bdi>{{ partial "number.html" .Params.eventDate }}</bdi> · {{ partial "number.html" (len $media.images) }} عکس</span></div></article>{{ else }}<p class="intro">هنوز تصویری منتشر نشده</p>{{ end }}</section>
+{{ partial "pagination.html" $paginator }}
+{{ end }}

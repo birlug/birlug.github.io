@@ -1,3 +1,14 @@
 /public
 .hugo_build.lock
 /resources
+/.venv
+/__pycache__
+/tools/__pycache__
+/data/events.json
+/static/calendar.ics
+/static/events/*/calendar.ics
+/assets/events/
+/static/media/
+/node_modules/
+/assets/icons/ui.svg
+/LUG Website.html

@@ -1,59 +1,38 @@
-#!/bin/env bash
-
-changes=$(git diff --name-only HEAD~1 | grep event)
-
-# TODO: disallow multiple posters
-poster=$(echo "$changes" | grep poster)
-
-# generate the caption
-info=$(echo "$changes" | grep info.md)
-content=$(cat $info | sed -n '/---/,/---/{ /---/!{ p } }')
-caption=$(echo "$content" | ./tools/template.py)
-
-if [[ "${TEST}" -eq 0 ]]
-then
-    echo "------ poster ------"
-    echo "$poster"
-    echo "------ info ------"
-    echo "$info"
-    echo "------ caption ------"
-    echo "$caption"
+#!/usr/bin/env bash
+set -euo pipefail
+cd "$(dirname "$0")/.."
+: "${EVENT:?Set EVENT to event directory slug}"
+[[ "$EVENT" =~ ^[a-zA-Z0-9_-]+$ ]] || { echo "Invalid event slug" >&2; exit 1; }
+caption=$(python3 tools/template.py --event "$EVENT")
+poster=$(python3 tools/template.py --event "$EVENT" --poster-url --media-base "${MEDIA_BASE_URL:-https://birlug.github.io}")
+if [[ "${1:-}" == "--dry-run" ]]; then
+  printf '%s\n\nPoster: %s\n' "$caption" "$poster"
+  exit 0
 fi
-
-# telegram
-if [[ -n "${poster}" ]]; then
-    message_id=$(curl -sS "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
-         -F chat_id="${CHAT_ID}" \
-         -F photo=@"${poster}" \
-         -F caption="$caption" \
-         -F parse_mode=Markdown | jq .result.message_id)
+: "${TELEGRAM_TOKEN:?Set TELEGRAM_TOKEN}"
+: "${CHAT_ID:?Set CHAT_ID}"
+if [[ -n "$poster" ]]; then
+  response=$(curl --fail --silent --show-error "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto" \
+    --form-string chat_id="$CHAT_ID" --form-string photo="$poster" --form-string caption="$caption" --form-string parse_mode=Markdown)
 else
-    message_id=$(curl -sS "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
-        -F chat_id="${CHAT_ID}" \
-        -F text="$caption" \
-        -F parse_mode=Markdown | jq .result.message_id)
+  response=$(curl --fail --silent --show-error "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+    --form-string chat_id="$CHAT_ID" --form-string text="$caption" --form-string parse_mode=Markdown)
 fi
-
-# pin the message
-curl -s -o /dev/null -w "telegram response: %{http_code}" \
-     -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/pinChatMessage" \
-     -d chat_id="${CHAT_ID}" \
-     -d message_id="$message_id"
-
-# mastodon
-# skip sending message to mastodon in test mode
-[[ "${TEST}" -eq 1 ]] && exit 0
-
-# mastodon can't parse markdown
-# so we should remove markdown symbols (bold/link) from the caption
-caption=$(echo "$caption" | sed 's/\*//g' | sed -E 's/\[([^]]+)\]\([^)]+\)/\1/g')
-
-image_id=$(curl -sS "${MASTODON_URL}/api/v2/media" \
-    -H "Authorization: Bearer ${MASTODON_TOKEN}" \
-    -F file=@"${poster}" | jq -r .id)
-
-curl -s -o /dev/null -w "mastodon response: %{http_code}" \
-     -X POST "${MASTODON_URL}/api/v1/statuses" \
-     -H "Authorization: Bearer ${MASTODON_TOKEN}" \
-     -F status="$caption" \
-     -F media_ids[]="$image_id"
+message_id=$(printf '%s' "$response" | jq -er 'select(.ok == true) | .result.message_id')
+curl --fail --silent --show-error "https://api.telegram.org/bot${TELEGRAM_TOKEN}/pinChatMessage" \
+  --data-urlencode chat_id="$CHAT_ID" --data-urlencode message_id="$message_id" | jq -e '.ok == true' >/dev/null
+[[ "${TEST:-1}" == 1 ]] && exit 0
+: "${MASTODON_TOKEN:?Set MASTODON_TOKEN}"
+: "${MASTODON_URL:?Set MASTODON_URL}"
+caption=$(printf '%s' "$caption" | sed 's/\*//g' | sed -E 's/\[([^]]+)\]\([^)]+\)/\1/g')
+media=()
+if [[ -n "$poster" ]]; then
+  file=$(mktemp --suffix=.jpg)
+  trap 'rm -f "$file"' EXIT
+  curl --fail --silent --show-error "$poster" -o "$file"
+  image_id=$(curl --fail --silent --show-error "${MASTODON_URL}/api/v2/media" \
+    -H "Authorization: Bearer ${MASTODON_TOKEN}" -F file=@"$file" | jq -er '.id')
+  media=(--form-string "media_ids[]=$image_id")
+fi
+curl --fail --silent --show-error "${MASTODON_URL}/api/v1/statuses" \
+  -H "Authorization: Bearer ${MASTODON_TOKEN}" --form-string status="$caption" "${media[@]}" | jq -e '.id != null' >/dev/null

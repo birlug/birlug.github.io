@@ -1,0 +1,11 @@
+@font-face{font-family:Vazirmatn;src:url('{{ "fonts/Vazirmatn.woff2" | absURL }}') format('woff2');font-weight:400 500;font-style:normal;font-display:swap}
+@font-face{font-family:'BirLUG Mono';src:url('{{ "fonts/BirLUGMono-Regular.woff2" | absURL }}') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'BirLUG Mono';src:url('{{ "fonts/BirLUGMono-Medium.woff2" | absURL }}') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+:root{
+ --color-canvas:#121212;--color-surface:#242424;--color-text:#FAFAFA;--color-text-2:#B4B4B4;--color-text-3:#898989;
+ --color-line:#2E2E2E;--color-line-strong:#393939;--color-accent:#3ECF8E;--color-on-accent:#121212;
+ --font-sans:Vazirmatn,Tahoma,sans-serif;--font-mono:'BirLUG Mono',ui-monospace,monospace;
+ --text-h1:36px;--text-feature:30px;--text-h2:22px;--text-item:17px;--text-body:16px;--text-nav:15px;--text-ui:14px;--text-meta:13px;
+ --radius-pill:9999px;--radius-input:8px;--radius-media:6px;--radius-dialog:8px;--content-max:760px;--sidebar-max:260px;
+ --space-1:4px;--space-2:8px;--space-3:12px;--space-4:16px;--space-6:24px;--space-8:32px;--space-12:48px;--space-16:64px;
+}

@@ -1,0 +1,5 @@
+{{- $records := slice -}}
+{{- range .Site.RegularPages -}}
+{{- if or (eq .Type "event") (eq .Section "~blog") (eq .Section "~challenge") -}}
+{{- $records = $records | append (dict "title" .Title "url" (partial "page-url.html" .) "text" (.Plain | truncate 8000 "") "topics" (delimit (.Params.topics | default slice) " ") "speakers" (delimit (.Params.speakers | default slice) " ")) -}}
+{{- end -}}{{- end -}}{{- $records | jsonify -}}

@@ -1,0 +1,2 @@
+{{ $key := strings.TrimPrefix "/" (.Get "src") }}{{ $image := index hugo.Data.media.files $key }}
+<figure>{{ if $image }}{{ partial "media-image.html" (dict "image" $image "site" .Page.Site "alt" ((.Get "alt") | default ((.Get "caption") | default .Page.Title))) }}{{ else }}<img src="{{ .Get "src" | safeURL }}" alt="{{ (.Get "alt") | default .Page.Title }}" loading="lazy" decoding="async">{{ end }}{{ with .Get "caption" }}<figcaption class="meta">{{ . }}</figcaption>{{ end }}</figure>

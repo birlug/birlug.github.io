@@ -1,0 +1,4 @@
+---
+title: "جست‌وجو"
+layout: search
+---
